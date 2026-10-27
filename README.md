@@ -2,6 +2,8 @@
 
 Projeto acadêmico de um sistema para auxiliar o Mercadinho Cerrado no controle de estoque e no acompanhamento das movimentações de produtos.
 
+Implementação do MVP concluída para execução local. Consulte o [guia de implantação](docs/IMPLANTACAO.md), o [relatório de validação](docs/VALIDACAO.md) e as pendências de publicação e avaliação externa antes de registrar o aceite acadêmico.
+
 ## Objetivo
 
 Desenvolver um produto mínimo viável (MVP) que permita registrar entradas e saídas de mercadorias, consultar o estoque e visualizar os resultados das movimentações.
@@ -28,9 +30,17 @@ mercadinho-cerrado-mvp/
 ├── .gitignore
 ├── .env.example
 ├── compose.yaml
+├── Dockerfile
 ├── pom.xml
+├── mvnw / mvnw.cmd
+├── .mvn/wrapper/
 ├── docs/
-│   └── PLANO.md
+│   ├── PLANO.md
+│   ├── AUTENTICACAO.md
+│   ├── MOVIMENTACOES.md
+│   ├── IMPLANTACAO.md
+│   └── VALIDACAO.md
+├── scripts/
 ├── src/
 │   ├── main/
 │   │   ├── java/
@@ -55,11 +65,13 @@ A pasta `prototipo/` contém capturas reais da interface das etapas 8 e 9, com c
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A interface inclui login, estoque, produtos, movimentação e resultado. A revisão final, as instruções de implantação, a medição de desempenho e a validação externa permanecem previstas no plano.
+As dez etapas técnicas foram concluídas, em commits separados. O cadastro, a consulta, a edição e a exclusão protegida de produtos estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A interface inclui login, estoque, produtos, movimentação e resultado. Execução local, Docker, testes e medição exploratória estão documentados. Publicação externa, medição no Android e aceite do participante permanecem pendentes.
 
 ## Execução da base técnica
 
-Pré-requisitos: JDK 21, Maven 3.6.3 ou superior e Docker com Docker Compose. Confira se `JAVA_HOME` aponta para o JDK 21 e inicie o Docker Desktop.
+Pré-requisitos deste modo: JDK 21 e Docker com Docker Compose. O Maven Wrapper incluído usa Maven 3.9.11, sem instalação manual. Confira se `JAVA_HOME` aponta para o JDK 21 e inicie o Docker Desktop.
+
+Também é possível executar aplicação e banco apenas com Docker: após configurar `.env`, use `docker compose --profile app up -d --build --wait`. A criação da conta dentro do contêiner e os passos completos estão no [guia de implantação](docs/IMPLANTACAO.md).
 
 Na raiz do projeto, copie `.env.example` para `.env` e preencha `POSTGRES_PASSWORD` com uma senha local. O arquivo real é ignorado pelo Git. Utilize valores simples sem aspas; uma senha aleatória hexadecimal é compatível com os dois leitores do arquivo. A aplicação importa `.env` como propriedades, e o Compose utiliza as mesmas variáveis para criar o banco. Variáveis de ambiente do processo têm precedência na aplicação.
 
@@ -76,10 +88,10 @@ Em seguida:
 
 ```sh
 docker compose up -d --wait
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Acesse [http://localhost:8080](http://localhost:8080) pelo navegador. Sem uma sessão, a interface direciona para a tela de login. Crie uma conta seguindo o [guia de autenticação](docs/AUTENTICACAO.md).
+No PowerShell, substitua `./mvnw` por `.\mvnw.cmd`. A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT` no modo Java local e por `APP_PORT` no Compose. Acesse [http://localhost:8080](http://localhost:8080) pelo navegador. Sem uma sessão, a interface direciona para a tela de login. Crie uma conta seguindo o [guia de autenticação](docs/AUTENTICACAO.md) ou o procedimento Docker no guia de implantação.
 
 Após entrar, você pode consultar o estoque, pesquisar por nome, filtrar produtos que precisam de reposição e navegar pelas páginas. Os cartões de resumo mostram os totais do catálogo inteiro, independentemente dos filtros. O botão **Cadastrar produto** abre o formulário de cadastro; cada produto oferece as ações **Editar** e **Excluir**. A exclusão exige confirmação e preserva produtos com histórico. O saldo inicial é informado no cadastro e não pode ser alterado na edição.
 
@@ -217,7 +229,7 @@ A migração V4 cria as contas de usuários, os hashes bcrypt e o controle persi
 A migração V3 acrescenta um índice de data e identificador para a ordenação do histórico global. A consulta carrega os produtos junto com os movimentos, evitando uma consulta adicional por item.
 
 ```sh
-mvn verify
+./mvnw verify
 ```
 
 Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. O cadastro é testado com MockMvc e persistência real, incluindo dados válidos, limites, campos ausentes, tipos inválidos, quantidades fracionadas e tentativa de injeção SQL tratada como texto.
@@ -226,11 +238,13 @@ Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [
 
 A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. Os testes de segurança verificam sessões, CSRF, logout, bcrypt, bloqueio de conta e criação administrativa de usuários.
 
-A suíte completa passou com **96 testes**, sem falhas ou testes ignorados.
+A suíte completa passou com **97 testes**, sem falhas ou testes ignorados, utilizando o Maven Wrapper. A atualização de um banco na versão inicial foi testada preservando produtos e histórico. Falhas de persistência retornam HTTP 503 com mensagem segura, sem expor detalhes do banco. O workflow do GitHub executará a suíte nos próximos pushes e pull requests.
 
 Na etapa 8, os fluxos de login válido/inválido, cadastro, edição, exclusão permitida e bloqueada por histórico, pesquisa, reposição, paginação e logout também foram executados no Chrome com PostgreSQL isolado. Foram conferidas larguras de 320, 720 e 1440 px e ampliação de texto de 200%, sem rolagem horizontal ou erros de JavaScript. Essas verificações técnicas não substituem a validação externa com usuários nem a futura medição de desempenho.
 
 Na etapa 9, foram verificados no Chrome o cenário 6 − 2 = 4 com alerta, entradas, rejeição de saldo insuficiente, recuperação da tela de resultado após recarga, filtros do histórico e comportamento responsivo. Uma resposta foi interrompida depois de o servidor gravar a saída: após recarregar a página e reenviar o mesmo UUID, o histórico manteve um único registro da tentativa e o saldo não foi debitado novamente.
+
+Na revisão final, a imagem Docker foi construída, aplicação e banco passaram nos healthchecks e a criação de contas foi exercitada no contêiner. Com 300 produtos e 1.000 movimentações, a mediana exploratória de carregamento foi de **1,217 s** no Chrome de desktop com rede limitada e CPU simulada. Isso não substitui a medição no Android definida no trabalho. As condições e pendências constam no [relatório de validação](docs/VALIDACAO.md).
 
 ## Cuidados com o repositório público
 

@@ -11,6 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import br.com.mercadinhocerrado.produto.ProdutoNaoEncontradoException;
 import br.com.mercadinhocerrado.produto.ProdutoComHistoricoException;
 import br.com.mercadinhocerrado.movimentacao.MovimentacaoInvalidaException;
+import org.springframework.dao.DataAccessException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -48,6 +49,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErroApi tratarMovimentacaoInvalida(MovimentacaoInvalidaException erro) {
         return new ErroApi(erro.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ErroApi tratarFalhaDePersistencia() {
+        return new ErroApi("Não foi possível concluir a operação no banco de dados. Tente novamente em instantes; em uma movimentação, reenvie a mesma tentativa.", List.of());
     }
 
     @ExceptionHandler(ProdutoComHistoricoException.class)

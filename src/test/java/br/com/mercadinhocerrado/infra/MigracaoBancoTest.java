@@ -101,6 +101,36 @@ class MigracaoBancoTest {
         }
     }
 
+    @Test
+    void atualizacaoDaVersaoInicialPreservaProdutosEHistorico() throws SQLException {
+        Flyway.configure().dataSource(BANCO.getJdbcUrl(), BANCO.getUsername(), BANCO.getPassword())
+                .defaultSchema("upgrade_test").schemas("upgrade_test").target("1").load().migrate();
+        try (var conexao = conectar(); var comando = conexao.createStatement()) {
+            comando.executeUpdate("""
+                    INSERT INTO upgrade_test.produto
+                    (id_produto, nome, categoria, preco, quantidade_estoque, estoque_minimo)
+                    VALUES (1, 'Produto legado', 'Alimentos', 10, 4, 5)
+                    """);
+            comando.executeUpdate("INSERT INTO upgrade_test.movimentacao (id_produto, tipo, quantidade) VALUES (1, 'SAIDA', 2)");
+        }
+        var atualizado = Flyway.configure().dataSource(BANCO.getJdbcUrl(), BANCO.getUsername(), BANCO.getPassword())
+                .defaultSchema("upgrade_test").schemas("upgrade_test").load();
+        assertEquals(3, atualizado.migrate().migrationsExecuted);
+        try (var conexao = conectar(); var comando = conexao.createStatement()) {
+            try (var produto = comando.executeQuery("SELECT quantidade_estoque FROM upgrade_test.produto WHERE id_produto=1")) {
+                assertTrue(produto.next());
+                assertEquals(4, produto.getInt(1));
+            }
+            try (var movimento = comando.executeQuery("SELECT quantidade, saldo_atual, id_operacao FROM upgrade_test.movimentacao")) {
+                assertTrue(movimento.next());
+                assertEquals(2, movimento.getInt(1));
+                assertNull(movimento.getObject(2));
+                assertNull(movimento.getObject(3));
+                assertFalse(movimento.next());
+            }
+        }
+    }
+
     private Connection conectar() throws SQLException {
         return DriverManager.getConnection(BANCO.getJdbcUrl(), BANCO.getUsername(), BANCO.getPassword());
     }

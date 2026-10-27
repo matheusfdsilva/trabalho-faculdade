@@ -171,14 +171,19 @@ class RegistroMovimentacaoTest {
     }
 
     @Test
-    void falhaNaGravacaoDoHistoricoDesfazOperacaoInteira() {
+    void falhaNaGravacaoDoHistoricoDesfazOperacaoInteira() throws Exception {
         jdbc.execute("""
                 CREATE FUNCTION rejeitar_movimentacao_teste() RETURNS trigger LANGUAGE plpgsql AS $$
                 BEGIN RAISE EXCEPTION 'Falha de gravacao simulada'; END; $$
                 """);
         jdbc.execute("CREATE TRIGGER falha_teste BEFORE INSERT ON movimentacao FOR EACH ROW EXECUTE FUNCTION rejeitar_movimentacao_teste()");
         try {
-            assertThrows(RuntimeException.class, () -> servico.registrar(dados(TipoMovimentacao.SAIDA, 2)));
+            mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON)
+                            .content(json.writeValueAsBytes(dados(TipoMovimentacao.SAIDA, 2))))
+                    .andExpect(status().isServiceUnavailable())
+                    .andExpect(jsonPath("$.mensagem").value(org.hamcrest.Matchers.containsString("mesma tentativa")))
+                    .andExpect(jsonPath("$.trace").doesNotExist())
+                    .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Falha de gravacao simulada"))));
             assertEquals(6, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
             assertEquals(0, movimentacoes.count());
         } finally {

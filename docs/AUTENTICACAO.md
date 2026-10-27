@@ -4,7 +4,7 @@ As APIs de produtos e movimentações exigem uma sessão autenticada. Todos os u
 
 ## Criar uma conta
 
-Com o PostgreSQL iniciado e o `.env` configurado, execute `mvn package -DskipTests`. No PowerShell, usando Java 21:
+Com o PostgreSQL iniciado e o `.env` configurado, execute `.\mvnw.cmd package -DskipTests` no PowerShell (ou `./mvnw package -DskipTests` no Linux/macOS). Usando Java 21:
 
 ```powershell
 $env:APP_USUARIO = Read-Host 'Login do funcionário'
@@ -23,7 +23,7 @@ O comando cria a conta e encerra a aplicação, sem abrir um servidor HTTP. Exec
 
 ## Login pela API
 
-Inicie a aplicação normalmente com `mvn spring-boot:run` e acesse `http://localhost:8080`. A tela de login solicita usuário e senha e, após a autenticação, apresenta o estoque. O botão Sair encerra a sessão. Se a sessão expirar, a interface solicita um novo login.
+Inicie a aplicação com `.\mvnw.cmd spring-boot:run` no PowerShell (ou `./mvnw spring-boot:run` no Linux/macOS) e acesse `http://localhost:8080`. A tela de login solicita usuário e senha e, após a autenticação, apresenta o estoque. O botão Sair encerra a sessão. Se a sessão expirar, a interface solicita um novo login. Para executar tudo em Docker, siga [IMPLANTACAO.md](IMPLANTACAO.md).
 
 Para utilizar diretamente a API pelo PowerShell, inicie uma sessão HTTP:
 
