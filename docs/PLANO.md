@@ -39,4 +39,4 @@ Cada etapa deverá resultar em um commit com mudanças verificáveis. A estrutur
 
 ## Estado atual
 
-Etapa 1: base técnica criada. As funcionalidades, autenticação e persistência serão adicionadas nas próximas etapas. Esta versão ainda não constitui o MVP funcional.
+Etapas 1 e 2: base técnica, configuração PostgreSQL por ambiente, Docker Compose e primeira migração Flyway criados. Testes de integração verificam as restrições do esquema em PostgreSQL real. As entidades JPA, regras de negócio, APIs e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não constitui o MVP funcional.
