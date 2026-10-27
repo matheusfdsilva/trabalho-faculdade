@@ -52,7 +52,7 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados. Movimentações, interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como o registro transacional de entradas e saídas. Consulta de histórico, filtros de reposição, interface e autenticação serão adicionados nas próximas etapas. Esta versão ainda não é o MVP funcional.
 
 ## Execução da base técnica
 
@@ -144,11 +144,45 @@ Na edição, envie todos os quatro campos abaixo. As validações são as mesmas
 
 A exclusão retorna HTTP **204**, sem corpo. Se houver movimentações, retorna **409** com uma mensagem explicativa, preservando o produto e o histórico. Consulta, edição e exclusão de um identificador inexistente retornam **404**. Identificadores não positivos ou parâmetros inválidos retornam **400**. Edição e exclusão utilizam bloqueio da linha dentro da transação, e a chave estrangeira mantém a proteção do histórico no banco.
 
+## Entradas e saídas de estoque (RF03/RF04)
+
+Envie `POST /api/movimentacoes` com `Content-Type: application/json`:
+
+```json
+{
+  "idOperacao": "f08a338e-cbc4-4e41-8a9c-b7f88a65a237",
+  "produtoId": 1,
+  "tipo": "SAIDA",
+  "quantidade": 2
+}
+```
+
+Todos os campos são obrigatórios. O identificador do produto deve ser positivo; o tipo aceita `ENTRADA` ou `SAIDA`; a quantidade deve ser um inteiro positivo. Saídas não podem exceder o saldo e entradas não podem ultrapassar 2.147.483.647 unidades no produto. O servidor gera a data e o horário da operação.
+
+O retorno HTTP **200** apresenta `id`, `idOperacao`, `produtoId`, `tipo`, `quantidade`, `dataMovimentacao`, `saldoAnterior`, `saldoAtual`, `estoqueMinimo` e `reposicaoNecessaria`. Esta última informação é verdadeira quando o saldo resultante é menor ou igual ao mínimo no momento da operação. No cenário do protótipo, saída de 2 unidades de um saldo 6, com mínimo 5, retorna saldo 4 e reposição necessária.
+
+Gere um UUID novo para cada operação pretendida. Em caso de falha de conexão, reenvie exatamente os mesmos dados e UUID: a proteção é por produto e `idOperacao`, retornando o resultado original sem alterar novamente o estoque. Usar o mesmo identificador no mesmo produto com outro tipo ou quantidade retorna **409**. O saldo retornado em um reenvio é o resultado daquela operação; consulte o produto para obter o saldo atual após outras movimentações.
+
+```powershell
+$movimentacao = @{
+    idOperacao = [guid]::NewGuid().ToString()
+    produtoId = 1
+    tipo = 'SAIDA'
+    quantidade = 2
+} | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/movimentacoes -ContentType 'application/json' -Body $movimentacao
+# Para repetir uma tentativa, reutilize $movimentacao sem gerar outro UUID.
+```
+
+Dados inválidos retornam **400**, produto inexistente retorna **404** e saldo insuficiente, excesso de saldo ou reutilização incompatível do UUID retornam **409**. Essas rejeições não alteram saldo nem histórico. O registro e a atualização do saldo participam da mesma transação; uma falha de gravação desfaz a operação. O bloqueio de linha serializa operações concorrentes no mesmo produto. O endpoint ainda não exige login nesta versão intermediária.
+
 ## Migrações e testes
 
 O Flyway executa as migrações em `src/main/resources/db/migration/` na inicialização e registra as versões aplicadas na tabela `flyway_schema_history`. A primeira migração cria `produto` e `movimentacao`, com chaves estrangeiras e restrições para quantidades, preço e tipo de operação. Produtos com movimentações não podem ser excluídos.
 
 O Hibernate apenas valida o esquema (`ddl-auto=validate`); novas alterações deverão ser feitas por novas migrações, sem editar as já aplicadas. A senha e o usuário do `.env` são usados pelo PostgreSQL na criação inicial do volume; alterá-los depois exige atualizar a conta no banco existente.
+
+A migração V2 acrescenta o identificador de operação e o resultado histórico (saldo anterior, saldo resultante e mínimo na ocasião), com unicidade por produto e operação. Registros anteriores são preservados com esses novos campos nulos, pois seus resultados originais não foram coletados.
 
 ```sh
 mvn verify
@@ -158,7 +192,7 @@ Os testes utilizam Testcontainers para criar um PostgreSQL temporário e indepen
 
 Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [suporte PostgreSQL no Flyway](https://documentation.red-gate.com/flyway/reference/database-driver-reference/postgresql-database).
 
-A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. A suíte atual contém 51 testes.
+A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. A suíte atual contém 71 testes.
 
 ## Cuidados com o repositório público
 

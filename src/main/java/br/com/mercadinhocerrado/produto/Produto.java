@@ -3,6 +3,8 @@ package br.com.mercadinhocerrado.produto;
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;
+import br.com.mercadinhocerrado.movimentacao.TipoMovimentacao;
+import br.com.mercadinhocerrado.movimentacao.MovimentacaoInvalidaException;
 
 @Entity
 @Table(name = "produto")
@@ -44,6 +46,20 @@ public class Produto {
         this.categoria = categoria;
         this.preco = preco;
         this.estoqueMinimo = estoqueMinimo;
+    }
+
+    public void movimentar(TipoMovimentacao tipo, int quantidade) {
+        if (tipo == null || quantidade <= 0) {
+            throw new MovimentacaoInvalidaException("Selecione o tipo e informe uma quantidade maior que zero.");
+        }
+        long novoSaldo = (long) quantidadeEstoque + (tipo == TipoMovimentacao.ENTRADA ? quantidade : -quantidade);
+        if (novoSaldo < 0) {
+            throw new MovimentacaoInvalidaException("Quantidade superior ao estoque disponível.");
+        }
+        if (novoSaldo > Integer.MAX_VALUE) {
+            throw new MovimentacaoInvalidaException("A entrada excede o limite de unidades permitido por produto.");
+        }
+        this.quantidadeEstoque = (int) novoSaldo;
     }
 
     public Long getId() { return id; }

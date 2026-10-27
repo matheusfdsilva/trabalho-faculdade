@@ -10,6 +10,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import br.com.mercadinhocerrado.produto.ProdutoNaoEncontradoException;
 import br.com.mercadinhocerrado.produto.ProdutoComHistoricoException;
+import br.com.mercadinhocerrado.movimentacao.MovimentacaoInvalidaException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -40,6 +41,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ProdutoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErroApi tratarProdutoNaoEncontrado(ProdutoNaoEncontradoException erro) {
+        return new ErroApi(erro.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(MovimentacaoInvalidaException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroApi tratarMovimentacaoInvalida(MovimentacaoInvalidaException erro) {
         return new ErroApi(erro.getMessage(), List.of());
     }
 
