@@ -172,6 +172,18 @@ class AutenticacaoTest {
         assertTrue(repositorio.existsByLogin("novo.operador"));
     }
 
+    @Test
+    void paginasEScriptsSaoServidosSemLiberarAsApis() throws Exception {
+        mvc.perform(get("/movimentacoes.html"))
+                .andExpect(status().isOk())
+                .andExpect(resultado -> assertTrue(resultado.getResponse()
+                        .getContentAsString(java.nio.charset.StandardCharsets.UTF_8).contains("Registrar movimentação")));
+        mvc.perform(get("/js/movimentacoes.js"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("sessionStorage")));
+        mvc.perform(get("/api/movimentacoes")).andExpect(status().isUnauthorized());
+    }
+
     private MockHttpSession entrar() throws Exception {
         return (MockHttpSession) mvc.perform(post("/api/auth/login").with(csrf())
                         .param("username", "operador").param("password", SENHA))

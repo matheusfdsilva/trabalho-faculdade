@@ -15,7 +15,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(acesso -> acesso
-                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/login.html", "/css/**", "/js/**", "/favicon.ico", "/api/auth/csrf").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/login.html", "/movimentacoes.html", "/css/**", "/js/**", "/favicon.ico", "/api/auth/csrf").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().denyAll())

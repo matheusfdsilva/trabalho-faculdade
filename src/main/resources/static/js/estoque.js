@@ -27,7 +27,7 @@ function render(products) {
     const status = document.createElement('span'); status.className = `badge ${low ? 'low' : 'normal'}`;
     status.textContent = low ? '⚠ Reposição necessária' : '✓ Normal'; cell(row, 'Situação').append(status);
     const actions = document.createElement('div'); actions.className = 'row-actions';
-    for (const [label, action] of [['Editar', () => openProduct(product.id)], ['Excluir', () => openDelete(product)]]) {
+    for (const [label, action] of [['Movimentar', () => location.assign(`/movimentacoes.html?produto=${product.id}`)], ['Editar', () => openProduct(product.id)], ['Excluir', () => openDelete(product)]]) {
       const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
       button.setAttribute('aria-label', `${label} ${product.nome}`); button.addEventListener('click', action); actions.append(button);
     }

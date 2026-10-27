@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movimentações · Mercadinho Cerrado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/movimentacoes.js"></script>
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo</a>
+  <div class="app-shell" id="aplicacao" hidden>
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="/" aria-label="Mercadinho Cerrado, início"><span class="brand-symbol" aria-hidden="true">m<span>•</span></span><span>mercadinho<br><strong>cerrado</strong></span></a>
+      <p class="nav-label">SEU MERCADINHO</p>
+      <nav><a class="nav-item" href="/"><span aria-hidden="true">▦</span> Estoque</a><a class="nav-item active" href="/movimentacoes.html" aria-current="page"><span aria-hidden="true">⇄</span> Movimentações</a></nav>
+      <div class="sidebar-note"><span class="note-dot" aria-hidden="true"></span><p>Cada entrada e saída<br>conta a história do seu estoque.</p></div>
+      <p class="sidebar-footer">MVP · Mercadinho Cerrado</p>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span class="breadcrumb">Gestão do mercadinho <span aria-hidden="true">/</span> <strong>Movimentações</strong></span><div class="account"><span class="avatar" aria-hidden="true">U</span><span id="usuario"></span><button class="button quiet" id="sair">Sair <span aria-hidden="true">↗</span></button></div></header>
+      <main id="conteudo" class="content" tabindex="-1">
+        <div id="mensagem" class="notice" role="status" tabindex="-1" hidden></div>
+        <section id="registro" aria-labelledby="titulo-registro">
+          <div class="page-heading"><div><p class="eyebrow">CADA MOVIMENTO CONTA</p><h1 id="titulo-registro">Registrar movimentação</h1><p class="muted">Registre o que chega e o que sai do seu estoque.</p></div><a class="button secondary" href="/">← Voltar ao estoque</a></div>
+          <div class="movement-layout">
+            <section class="movement-card" aria-labelledby="titulo-dados">
+              <div class="panel-heading"><div><h2 id="titulo-dados">Dados da movimentação</h2><p class="muted">Selecione um produto e confira os dados antes de confirmar.</p></div></div>
+              <div id="busca-area" class="movement-search"><form id="busca-produto"><label for="nome-busca">Buscar produto por nome</label><div class="search-control"><input id="nome-busca" maxlength="150" type="search" placeholder="Digite o nome para localizar"><button class="button secondary" type="submit" id="buscar-produto">Buscar</button></div></form><p id="estado-busca" class="form-hint" role="status">Carregando produtos…</p></div>
+              <form id="movimento-form" class="movement-form">
+                <div id="erro-movimento" class="notice error" role="alert" tabindex="-1" hidden></div>
+                <label for="produto">Produto</label><select id="produto" name="produtoId" required aria-describedby="estoque-atual erro-produto"><option value="">Selecione um produto</option></select><span class="field-error" id="erro-produto"></span>
+                <p id="estoque-atual" class="form-hint" aria-live="polite">Selecione um produto para consultar o saldo.</p>
+                <div class="form-grid"><div><label for="tipo">Tipo de movimentação</label><select id="tipo" name="tipo" required><option value="SAIDA">Saída de mercadoria</option><option value="ENTRADA">Entrada de mercadoria</option></select></div><div><label for="quantidade">Quantidade (un.)</label><input id="quantidade" name="quantidade" type="number" min="1" max="2147483647" step="1" required aria-describedby="erro-quantidade"><span class="field-error" id="erro-quantidade"></span></div></div>
+                <p id="saldo-no-form" class="inline-preview" aria-live="polite">Informe o produto e a quantidade para conferir o saldo previsto.</p>
+                <div class="dialog-actions"><a class="button secondary" href="/">Cancelar</a><button class="button primary" type="submit" id="confirmar" disabled>Confirmar movimentação</button></div>
+              </form>
+            </section>
+            <aside class="movement-aside" aria-labelledby="titulo-previa"><p class="eyebrow">ANTES DE CONFIRMAR</p><h2 id="titulo-previa">Confira o saldo previsto</h2><p class="muted">Uma conferência rápida ajuda a manter tudo em ordem.</p><dl class="preview-details"><div><dt>Produto</dt><dd id="previa-produto">Nenhum selecionado</dd></div><div><dt>Estoque atual</dt><dd id="previa-atual">—</dd></div><div><dt>Estoque mínimo</dt><dd id="previa-minimo">—</dd></div></dl><div class="balance-preview"><span>Saldo após a movimentação</span><strong id="previa-saldo">—</strong><span>unidades</span></div><p id="previa-aviso" class="form-hint" aria-live="polite">Informe a quantidade para ver a previsão.</p><p class="preview-footnote">O saldo definitivo é conferido pelo sistema no momento da confirmação.</p></aside>
+          </div>
+        </section>
+        <section id="resultado" aria-labelledby="titulo-resultado" hidden>
+          <div class="page-heading"><div><p class="eyebrow">TUDO REGISTRADO</p><h1 id="titulo-resultado" tabindex="-1">Resultado da movimentação</h1><p class="muted">Seu estoque foi atualizado e o registro está no histórico.</p></div></div>
+          <div class="result-card"><span class="result-check" aria-hidden="true">✓</span><h2>Movimentação registrada com sucesso</h2><p id="resultado-referencia" class="muted"></p><dl id="resultado-dados" class="result-details"></dl><div class="result-balance"><span>Estoque após esta operação</span><strong id="resultado-saldo"></strong><span>unidades</span></div><div id="resultado-alerta" class="notice" role="status"></div><p class="form-hint">Este é o resultado no momento do registro. Outras movimentações podem alterar o saldo atual.</p><div class="dialog-actions"><a class="button secondary" href="/">Voltar ao estoque</a><button class="button primary" type="button" id="nova-movimentacao">Nova movimentação</button></div></div>
+        </section>
+        <section id="historico" class="inventory-panel history-panel" aria-labelledby="titulo-historico">
+          <div class="panel-heading"><div><h2 id="titulo-historico">Histórico de movimentações</h2><p class="muted">Entradas e saídas registradas, da mais recente para a mais antiga.</p></div></div>
+          <form id="historico-filtros" class="filters"><div><label for="historico-tipo">Tipo de movimentação</label><select id="historico-tipo"><option value="">Todas</option><option value="ENTRADA">Entradas</option><option value="SAIDA">Saídas</option></select></div><label class="checkbox-field" for="historico-produto"><input id="historico-produto" type="checkbox" disabled> Somente o produto selecionado</label><button type="submit" class="button secondary">Atualizar histórico</button></form>
+          <p id="historico-estado" class="list-state" role="status">Carregando histórico…</p><div id="historico-lista" aria-busy="false"><table id="historico-tabela" class="history-table" hidden><caption class="sr-only">Histórico somente para leitura</caption><thead><tr><th scope="col">Produto</th><th scope="col">Operação</th><th scope="col">Quantidade</th><th scope="col">Data e hora</th><th scope="col">Saldo após</th></tr></thead><tbody id="historico-itens"></tbody></table></div><div class="pagination"><p id="historico-resumo" aria-live="polite"></p><div><button class="button secondary" id="historico-anterior" disabled>← Anterior</button><button class="button secondary" id="historico-proxima" disabled>Próxima →</button></div></div>
+        </section>
+        <footer class="content-footer">Cada registro deixa seu estoque mais confiável.<span>Mercadinho Cerrado</span></footer>
+      </main>
+    </div>
+  </div>
+  <p id="iniciando" class="loading-screen" role="status">Preparando as movimentações…</p>
+</body>
+</html>

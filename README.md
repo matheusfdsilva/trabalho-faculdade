@@ -42,19 +42,20 @@ mercadinho-cerrado-mvp/
     └── .gitkeep
 ```
 
-A pasta `prototipo/` contém capturas reais da interface da etapa 8, com conta e produtos fictícios:
+A pasta `prototipo/` contém capturas reais da interface das etapas 8 e 9, com contas e produtos fictícios:
 
 - `tela-login.png`: entrada no sistema.
 - `tela-1-inicial.png`: consulta do estoque em computador.
 - `tela-1-celular.png`: consulta do estoque em largura de 320 px.
-
-As capturas da movimentação e do resultado serão adicionadas com a implementação dessas telas na etapa 9.
+- `tela-2-movimentacao.png`: formulário de movimentação e saldo previsto.
+- `tela-3-resultado.png`: confirmação da saída de 2 unidades, de um saldo 6 para 4, com alerta de reposição.
+- `tela-2-celular.png` e `tela-3-celular.png`: movimentação e resultado em largura de 320 px.
 
 ## Desenvolvimento incremental
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A autenticação e as telas de login, estoque e produtos estão disponíveis. A interface de movimentações e resultados será implementada na etapa 9.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A interface inclui login, estoque, produtos, movimentação e resultado. A revisão final, as instruções de implantação, a medição de desempenho e a validação externa permanecem previstas no plano.
 
 ## Execução da base técnica
 
@@ -83,6 +84,8 @@ A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PO
 Após entrar, você pode consultar o estoque, pesquisar por nome, filtrar produtos que precisam de reposição e navegar pelas páginas. Os cartões de resumo mostram os totais do catálogo inteiro, independentemente dos filtros. O botão **Cadastrar produto** abre o formulário de cadastro; cada produto oferece as ações **Editar** e **Excluir**. A exclusão exige confirmação e preserva produtos com histórico. O saldo inicial é informado no cadastro e não pode ser alterado na edição.
 
 A interface utiliza HTML, CSS e JavaScript nativos, servidos pela própria aplicação, sem dependências externas de frontend. As telas se adaptam a computadores e celulares; no celular, os produtos são apresentados em cartões. Os controles têm rótulos, foco visível e alertas com texto e símbolo. Os diálogos permitem navegação por teclado e fechamento com Escape. Mensagens de conexão não provocam reenvio automático de gravações.
+
+O botão **Registrar movimentação** abre o registro de entradas e saídas; a ação **Movimentar** de cada produto já o seleciona no formulário. Confira o saldo previsto, confirme e veja o resultado retornado pelo servidor. O histórico paginado fica abaixo do formulário e aceita filtros por tipo e produto selecionado. O [guia de movimentações](docs/MOVIMENTACOES.md) explica o fluxo e a recuperação de tentativas sem confirmação na mesma aba.
 
 O PostgreSQL 16 fica acessível apenas no computador local, na porta definida por `DB_PORT` (padrão 5432). Se ela estiver ocupada, altere `DB_PORT` no `.env` antes de iniciar. O Compose mantém os dados em um volume persistente. Para parar os serviços sem apagar os dados, execute `docker compose down`.
 
@@ -223,9 +226,11 @@ Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [
 
 A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. Os testes de segurança verificam sessões, CSRF, logout, bcrypt, bloqueio de conta e criação administrativa de usuários.
 
-A suíte completa passou com **95 testes**, sem falhas ou testes ignorados.
+A suíte completa passou com **96 testes**, sem falhas ou testes ignorados.
 
 Na etapa 8, os fluxos de login válido/inválido, cadastro, edição, exclusão permitida e bloqueada por histórico, pesquisa, reposição, paginação e logout também foram executados no Chrome com PostgreSQL isolado. Foram conferidas larguras de 320, 720 e 1440 px e ampliação de texto de 200%, sem rolagem horizontal ou erros de JavaScript. Essas verificações técnicas não substituem a validação externa com usuários nem a futura medição de desempenho.
+
+Na etapa 9, foram verificados no Chrome o cenário 6 − 2 = 4 com alerta, entradas, rejeição de saldo insuficiente, recuperação da tela de resultado após recarga, filtros do histórico e comportamento responsivo. Uma resposta foi interrompida depois de o servidor gravar a saída: após recarregar a página e reenviar o mesmo UUID, o histórico manteve um único registro da tentativa e o saldo não foi debitado novamente.
 
 ## Cuidados com o repositório público
 
