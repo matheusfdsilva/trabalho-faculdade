@@ -39,4 +39,4 @@ Cada etapa deverá resultar em um commit com mudanças verificáveis. A estrutur
 
 ## Estado atual
 
-Etapas 1 e 2: base técnica, configuração PostgreSQL por ambiente, Docker Compose e primeira migração Flyway criados. Testes de integração verificam as restrições do esquema em PostgreSQL real. As entidades JPA, regras de negócio, APIs e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não constitui o MVP funcional.
+Etapas 1 a 3 concluídas: base técnica, configuração PostgreSQL por ambiente, Docker Compose, primeira migração Flyway e cadastro de produtos (`POST /api/produtos`). O cadastro utiliza entidade JPA, repository, service transacional, DTOs e validação no servidor, com mensagens de erro por campo. A suíte passa com 29 testes, incluindo persistência real e rejeição de entradas inválidas sem gravação. A próxima etapa será consulta paginada, edição e exclusão protegida. Interface e autenticação continuam previstas para as etapas posteriores; esta versão ainda não constitui o MVP funcional.

@@ -52,7 +52,7 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-As APIs de estoque, a interface e a autenticação serão implementadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro de produtos via API está implementado. Consulta, edição, exclusão, movimentações, interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
 
 ## Execução da base técnica
 
@@ -76,9 +76,44 @@ docker compose up -d --wait
 mvn spring-boot:run
 ```
 
-A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Nesta etapa não há telas nem endpoints de negócio; uma resposta 404 em `/` é esperada.
+A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Nesta etapa não há telas; uma resposta 404 em `/` é esperada. O cadastro pode ser utilizado pela API descrita abaixo.
 
 O PostgreSQL 16 fica acessível apenas no computador local, na porta definida por `DB_PORT` (padrão 5432). Se ela estiver ocupada, altere `DB_PORT` no `.env` antes de iniciar. O Compose mantém os dados em um volume persistente. Para parar os serviços sem apagar os dados, execute `docker compose down`.
+
+## Cadastro de produtos (RF01)
+
+Envie `POST /api/produtos` com `Content-Type: application/json`:
+
+```json
+{
+  "nome": "Óleo de Soja 900 ml",
+  "categoria": "Alimentos",
+  "preco": 8.50,
+  "quantidadeEstoque": 6,
+  "estoqueMinimo": 5
+}
+```
+
+Exemplo no PowerShell, após iniciar o banco e a aplicação:
+
+```powershell
+$produto = @{
+    nome = 'Óleo de Soja 900 ml'
+    categoria = 'Alimentos'
+    preco = 8.50
+    quantidadeEstoque = 6
+    estoqueMinimo = 5
+} | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/produtos -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($produto))
+```
+
+O retorno é HTTP **201**, com o identificador gerado e os dados gravados. Cada envio válido cria um novo produto; nomes repetidos são permitidos. Espaços nas extremidades de nome e categoria são removidos.
+
+Todos os campos são obrigatórios. Nome e categoria aceitam, respectivamente, até 150 e 80 caracteres, sem marcações HTML ou caracteres de controle. O preço deve estar entre zero e 99.999.999,99, com até duas casas decimais. Quantidade e estoque mínimo devem ser inteiros entre zero e 2.147.483.647. Zero é aceito para preço e saldos. O saldo informado é o estoque inicial; futuras alterações serão feitas por movimentações.
+
+Dados inválidos retornam HTTP **400**, sem cadastrar o produto. Erros de validação incluem `mensagem` e a lista `campos`, com o nome do campo e uma orientação. JSON malformado ou tipos incompatíveis retornam uma mensagem geral sem detalhes internos.
+
+A autenticação será implementada na etapa 7; o endpoint ainda não exige login nesta versão intermediária.
 
 ## Migrações e testes
 
@@ -90,7 +125,7 @@ O Hibernate apenas valida o esquema (`ddl-auto=validate`); novas alterações de
 mvn verify
 ```
 
-Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. Nenhum teste substitui a futura regra transacional de atualização de saldo.
+Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. O cadastro é testado com MockMvc e persistência real, incluindo dados válidos, limites, campos ausentes, tipos inválidos, quantidades fracionadas e tentativa de injeção SQL tratada como texto. Nenhum teste substitui a futura regra transacional de atualização de saldo.
 
 Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [suporte PostgreSQL no Flyway](https://documentation.red-gate.com/flyway/reference/database-driver-reference/postgresql-database).
 
