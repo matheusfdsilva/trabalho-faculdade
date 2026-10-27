@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(properties = "spring.config.import=")
 @AutoConfigureMockMvc
+@WithMockUser
 @Testcontainers
 class ManutencaoProdutoTest {
     @Container
@@ -131,7 +134,7 @@ class ManutencaoProdutoTest {
     void editaDadosSemAlterarSaldoMesmoComHistorico() throws Exception {
         var produto = salvar("Arroz");
         registrarHistorico(produto.getId());
-        mvc.perform(put("/api/produtos/{id}", produto.getId()).contentType(APPLICATION_JSON).content(EDICAO))
+        mvc.perform(put("/api/produtos/{id}", produto.getId()).with(csrf()).contentType(APPLICATION_JSON).content(EDICAO))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Arroz integral"))
                 .andExpect(jsonPath("$.categoria").value("Grãos"))
@@ -154,7 +157,7 @@ class ManutencaoProdutoTest {
     })
     void edicaoInvalidaNaoModificaProduto(String corpo) throws Exception {
         var produto = salvar("Original");
-        mvc.perform(put("/api/produtos/{id}", produto.getId()).contentType(APPLICATION_JSON).content(corpo))
+        mvc.perform(put("/api/produtos/{id}", produto.getId()).with(csrf()).contentType(APPLICATION_JSON).content(corpo))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.mensagem").isNotEmpty());
         var salvo = produtos.findById(produto.getId()).orElseThrow();
@@ -167,7 +170,7 @@ class ManutencaoProdutoTest {
     @Test
     void excluiProdutoSemHistorico() throws Exception {
         var produto = salvar("Arroz");
-        mvc.perform(delete("/api/produtos/{id}", produto.getId()))
+        mvc.perform(delete("/api/produtos/{id}", produto.getId()).with(csrf()))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
         assertFalse(produtos.existsById(produto.getId()));
@@ -177,7 +180,7 @@ class ManutencaoProdutoTest {
     void impedeExclusaoComHistoricoSemExporSql() throws Exception {
         var produto = salvar("Arroz");
         registrarHistorico(produto.getId());
-        mvc.perform(delete("/api/produtos/{id}", produto.getId()))
+        mvc.perform(delete("/api/produtos/{id}", produto.getId()).with(csrf()))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.mensagem").value("Não é possível excluir um produto com histórico de movimentações."))
                 .andExpect(jsonPath("$.trace").doesNotExist());
@@ -189,9 +192,9 @@ class ManutencaoProdutoTest {
     void produtoInexistenteRetorna404EmConsultaEdicaoEExclusao() throws Exception {
         long id = Long.MAX_VALUE;
         mvc.perform(get("/api/produtos/{id}", id)).andExpect(status().isNotFound());
-        mvc.perform(put("/api/produtos/{id}", id).contentType(APPLICATION_JSON).content(EDICAO))
+        mvc.perform(put("/api/produtos/{id}", id).with(csrf()).contentType(APPLICATION_JSON).content(EDICAO))
                 .andExpect(status().isNotFound());
-        mvc.perform(delete("/api/produtos/{id}", id)).andExpect(status().isNotFound());
+        mvc.perform(delete("/api/produtos/{id}", id).with(csrf())).andExpect(status().isNotFound());
     }
 
     @ParameterizedTest

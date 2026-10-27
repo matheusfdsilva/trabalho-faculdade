@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(properties = "spring.config.import=")
 @AutoConfigureMockMvc
+@WithMockUser
 @Testcontainers
 class CadastroProdutoTest {
     @Container
@@ -54,7 +57,7 @@ class CadastroProdutoTest {
 
     @Test
     void cadastraProdutoEPersisteDadosComIdentificadorGerado() throws Exception {
-        var resposta = mvc.perform(post("/api/produtos").contentType(APPLICATION_JSON).content(CADASTRO))
+        var resposta = mvc.perform(post("/api/produtos").with(csrf()).contentType(APPLICATION_JSON).content(CADASTRO))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.nome").value("Óleo de Soja 900 ml"))
                 .andExpect(jsonPath("$.categoria").value("Alimentos"))
@@ -77,7 +80,7 @@ class CadastroProdutoTest {
         var dados = json.readTree(CADASTRO).deepCopy();
         ((com.fasterxml.jackson.databind.node.ObjectNode) dados)
                 .put("preco", 0).put("quantidadeEstoque", 0).put("estoqueMinimo", 0);
-        mvc.perform(post("/api/produtos").contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
+        mvc.perform(post("/api/produtos").with(csrf()).contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
                 .andExpect(status().isCreated());
         assertEquals(1, produtos.count());
     }
@@ -87,7 +90,7 @@ class CadastroProdutoTest {
     void rejeitaDadosInvalidosSemGravar(String campo, Object valor) throws Exception {
         var dados = (com.fasterxml.jackson.databind.node.ObjectNode) json.readTree(CADASTRO);
         dados.set(campo, json.valueToTree(valor));
-        mvc.perform(post("/api/produtos").contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
+        mvc.perform(post("/api/produtos").with(csrf()).contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.mensagem").value("Confira os campos informados."))
                 .andExpect(jsonPath("$.campos[?(@.campo == '" + campo + "')]").isNotEmpty());
@@ -116,7 +119,7 @@ class CadastroProdutoTest {
     @ParameterizedTest
     @MethodSource("corposInvalidos")
     void rejeitaJsonOuTiposInvalidosSemExporDetalhesInternos(String corpo) throws Exception {
-        mvc.perform(post("/api/produtos").contentType(APPLICATION_JSON).content(corpo))
+        mvc.perform(post("/api/produtos").with(csrf()).contentType(APPLICATION_JSON).content(corpo))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.mensagem").isNotEmpty())
                 .andExpect(jsonPath("$.trace").doesNotExist())
@@ -137,7 +140,7 @@ class CadastroProdutoTest {
         var dados = (com.fasterxml.jackson.databind.node.ObjectNode) json.readTree(CADASTRO);
         String nome = "Arroz'); DROP TABLE produto; --";
         dados.put("nome", nome);
-        mvc.perform(post("/api/produtos").contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
+        mvc.perform(post("/api/produtos").with(csrf()).contentType(APPLICATION_JSON).content(json.writeValueAsBytes(dados)))
                 .andExpect(status().isCreated());
         assertEquals(nome, produtos.findAll().getFirst().getNome());
         assertEquals(1, produtos.count());

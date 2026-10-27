@@ -52,7 +52,7 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. Interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A autenticação está implementada; a interface será adicionada nas próximas etapas. Esta versão ainda não é o MVP funcional.
 
 ## Execução da base técnica
 
@@ -80,6 +80,10 @@ A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PO
 
 O PostgreSQL 16 fica acessível apenas no computador local, na porta definida por `DB_PORT` (padrão 5432). Se ela estiver ocupada, altere `DB_PORT` no `.env` antes de iniciar. O Compose mantém os dados em um volume persistente. Para parar os serviços sem apagar os dados, execute `docker compose down`.
 
+## Autenticação
+
+Siga o [guia de autenticação](docs/AUTENTICACAO.md) para criar contas e iniciar uma sessão. Não existe conta padrão nem cadastro público. Todas as APIs de negócio exigem login; operações que alteram dados também exigem token CSRF. Os exemplos abaixo pressupõem as variáveis `$sessao` e `$cabecalhos` obtidas nesse guia. A tela de login será implementada na próxima etapa.
+
 ## Cadastro de produtos (RF01)
 
 Envie `POST /api/produtos` com `Content-Type: application/json`:
@@ -104,7 +108,7 @@ $produto = @{
     quantidadeEstoque = 6
     estoqueMinimo = 5
 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/produtos -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($produto))
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/produtos -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($produto)) -WebSession $sessao -Headers $cabecalhos
 ```
 
 O retorno é HTTP **201**, com o identificador gerado e os dados gravados. Cada envio válido cria um novo produto; nomes repetidos são permitidos. Espaços nas extremidades de nome e categoria são removidos.
@@ -113,7 +117,7 @@ Todos os campos são obrigatórios. Nome e categoria aceitam, respectivamente, a
 
 Dados inválidos retornam HTTP **400**, sem cadastrar o produto. Erros de validação incluem `mensagem` e a lista `campos`, com o nome do campo e uma orientação. JSON malformado, campos desconhecidos ou tipos incompatíveis retornam uma mensagem geral sem detalhes internos.
 
-A autenticação será implementada na etapa 7; o endpoint ainda não exige login nesta versão intermediária.
+O endpoint exige login e token CSRF válido para cadastro.
 
 ## Consulta e manutenção de produtos (RF02)
 
@@ -127,8 +131,8 @@ A autenticação será implementada na etapa 7; o endpoint ainda não exige logi
 A listagem aceita `nome` (trecho do nome, até 150 caracteres, sem distinguir maiúsculas de minúsculas), `pagina` (inicia em 0, até 1.000.000) e `tamanho` (padrão 20, de 1 a 100). A ordenação é por nome e, em caso de empate, identificador. `%` e `_` são tratados como texto na busca. A resposta contém `itens`, `pagina`, `tamanho`, `totalItens` e `totalPaginas`. Páginas além do final retornam uma lista vazia.
 
 ```powershell
-Invoke-RestMethod 'http://localhost:8080/api/produtos?nome=arroz&pagina=0&tamanho=20'
-Invoke-RestMethod 'http://localhost:8080/api/produtos/1'
+Invoke-RestMethod 'http://localhost:8080/api/produtos?nome=arroz&pagina=0&tamanho=20' -WebSession $sessao
+Invoke-RestMethod 'http://localhost:8080/api/produtos/1' -WebSession $sessao
 ```
 
 Na edição, envie todos os quatro campos abaixo. As validações são as mesmas do cadastro, mas `quantidadeEstoque` não é aceito: o saldo será alterado exclusivamente por movimentações. O retorno HTTP **200** inclui o produto atualizado.
@@ -170,11 +174,11 @@ $movimentacao = @{
     tipo = 'SAIDA'
     quantidade = 2
 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/movimentacoes -ContentType 'application/json' -Body $movimentacao
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/movimentacoes -ContentType 'application/json' -Body $movimentacao -WebSession $sessao -Headers $cabecalhos
 # Para repetir uma tentativa, reutilize $movimentacao sem gerar outro UUID.
 ```
 
-Dados inválidos retornam **400**, produto inexistente retorna **404** e saldo insuficiente, excesso de saldo ou reutilização incompatível do UUID retornam **409**. Essas rejeições não alteram saldo nem histórico. O registro e a atualização do saldo participam da mesma transação; uma falha de gravação desfaz a operação. O bloqueio de linha serializa operações concorrentes no mesmo produto. O endpoint ainda não exige login nesta versão intermediária.
+Dados inválidos retornam **400**, produto inexistente retorna **404** e saldo insuficiente, excesso de saldo ou reutilização incompatível do UUID retornam **409**. Essas rejeições não alteram saldo nem histórico. O registro e a atualização do saldo participam da mesma transação; uma falha de gravação desfaz a operação. O bloqueio de linha serializa operações concorrentes no mesmo produto. O endpoint exige login e token CSRF válido.
 
 ## Reposição e histórico (RF05/RF06)
 
@@ -183,13 +187,13 @@ Para consultar apenas produtos com quantidade menor ou igual ao estoque mínimo,
 O histórico somente para leitura está disponível em `GET /api/movimentacoes`, com filtros opcionais `produtoId` e `tipo` (`ENTRADA` ou `SAIDA`). A paginação segue os mesmos limites dos produtos: `pagina` de 0 a 1.000.000 e `tamanho` de 1 a 100, padrão 20. A resposta contém `itens`, `pagina`, `tamanho`, `totalItens` e `totalPaginas`.
 
 ```powershell
-Invoke-RestMethod 'http://localhost:8080/api/produtos?reposicao=true&pagina=0&tamanho=20'
-Invoke-RestMethod 'http://localhost:8080/api/movimentacoes?produtoId=1&tipo=SAIDA&pagina=0&tamanho=20'
+Invoke-RestMethod 'http://localhost:8080/api/produtos?reposicao=true&pagina=0&tamanho=20' -WebSession $sessao
+Invoke-RestMethod 'http://localhost:8080/api/movimentacoes?produtoId=1&tipo=SAIDA&pagina=0&tamanho=20' -WebSession $sessao
 ```
 
 Os movimentos são ordenados por data decrescente e, em caso de empate, por identificador decrescente. Cada item inclui os dados da operação e `produtoNome`, que representa o nome atual do cadastro. Saldo anterior, saldo resultante, mínimo e necessidade de reposição representam o momento da operação, sem serem recalculados com o estoque atual.
 
-Registros anteriores à migração V2 podem não ter resultado de saldo armazenado; nesses casos, `idOperacao`, `saldoAnterior`, `saldoAtual`, `estoqueMinimo` e `reposicaoNecessaria` são `null`. A interface deverá apresentar essas informações como não registradas. Filtros sem resultados retornam uma página vazia; filtrar por produto inexistente retorna **404**, e filtros inválidos retornam **400**. Não há endpoints para editar ou excluir movimentos. Essas consultas ainda não exigem login nesta versão intermediária.
+Registros anteriores à migração V2 podem não ter resultado de saldo armazenado; nesses casos, `idOperacao`, `saldoAnterior`, `saldoAtual`, `estoqueMinimo` e `reposicaoNecessaria` são `null`. A interface deverá apresentar essas informações como não registradas. Filtros sem resultados retornam uma página vazia; filtrar por produto inexistente retorna **404**, e filtros inválidos retornam **400**. Não há endpoints para editar ou excluir movimentos. Essas consultas exigem uma sessão autenticada.
 
 ## Migrações e testes
 
@@ -198,6 +202,8 @@ O Flyway executa as migrações em `src/main/resources/db/migration/` na inicial
 O Hibernate apenas valida o esquema (`ddl-auto=validate`); novas alterações deverão ser feitas por novas migrações, sem editar as já aplicadas. A senha e o usuário do `.env` são usados pelo PostgreSQL na criação inicial do volume; alterá-los depois exige atualizar a conta no banco existente.
 
 A migração V2 acrescenta o identificador de operação e o resultado histórico (saldo anterior, saldo resultante e mínimo na ocasião), com unicidade por produto e operação. Registros anteriores são preservados com esses novos campos nulos, pois seus resultados originais não foram coletados.
+
+A migração V4 cria as contas de usuários, os hashes bcrypt e o controle persistente de falhas de login.
 
 A migração V3 acrescenta um índice de data e identificador para a ordenação do histórico global. A consulta carrega os produtos junto com os movimentos, evitando uma consulta adicional por item.
 
@@ -209,7 +215,9 @@ Os testes utilizam Testcontainers para criar um PostgreSQL temporário e indepen
 
 Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [suporte PostgreSQL no Flyway](https://documentation.red-gate.com/flyway/reference/database-driver-reference/postgresql-database).
 
-A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. A suíte atual contém 84 testes.
+A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. Os testes de segurança verificam sessões, CSRF, logout, bcrypt, bloqueio de conta e criação administrativa de usuários.
+
+A suíte completa passou com **95 testes**, sem falhas ou testes ignorados.
 
 ## Cuidados com o repositório público
 

@@ -10,6 +10,8 @@ import br.com.mercadinhocerrado.produto.Produto;
 import br.com.mercadinhocerrado.produto.ProdutoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(properties = "spring.config.import=")
 @AutoConfigureMockMvc
+@WithMockUser
 @Testcontainers
 class RegistroMovimentacaoTest {
     @Container
@@ -65,7 +68,7 @@ class RegistroMovimentacaoTest {
 
     @Test
     void saidaAtualizaSaldoEPreservaResultadoDoCenarioAcademico() throws Exception {
-        mvc.perform(post("/api/movimentacoes").contentType(APPLICATION_JSON)
+        mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON)
                         .content(json.writeValueAsBytes(dados(TipoMovimentacao.SAIDA, 2))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.saldoAnterior").value(6))
@@ -98,7 +101,7 @@ class RegistroMovimentacaoTest {
 
     @Test
     void rejeitaSaidaSemSaldoSemAlterarEstoqueOuHistorico() throws Exception {
-        mvc.perform(post("/api/movimentacoes").contentType(APPLICATION_JSON)
+        mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON)
                         .content(json.writeValueAsBytes(dados(TipoMovimentacao.SAIDA, 7))))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.mensagem").value("Quantidade superior ao estoque disponível."));
@@ -129,7 +132,7 @@ class RegistroMovimentacaoTest {
         var original = dados(TipoMovimentacao.SAIDA, 2);
         servico.registrar(original);
         var alterada = new RegistroMovimentacaoRequest(original.idOperacao(), produtoId, TipoMovimentacao.ENTRADA, 2);
-        mvc.perform(post("/api/movimentacoes").contentType(APPLICATION_JSON).content(json.writeValueAsBytes(alterada)))
+        mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON).content(json.writeValueAsBytes(alterada)))
                 .andExpect(status().isConflict());
         assertEquals(4, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
         assertEquals(1, movimentacoes.count());
@@ -138,7 +141,7 @@ class RegistroMovimentacaoTest {
     @Test
     void produtoInexistenteRetorna404() throws Exception {
         var operacao = new RegistroMovimentacaoRequest(UUID.randomUUID(), Long.MAX_VALUE, TipoMovimentacao.SAIDA, 1);
-        mvc.perform(post("/api/movimentacoes").contentType(APPLICATION_JSON).content(json.writeValueAsBytes(operacao)))
+        mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON).content(json.writeValueAsBytes(operacao)))
                 .andExpect(status().isNotFound());
         assertEquals(0, movimentacoes.count());
     }
@@ -147,7 +150,7 @@ class RegistroMovimentacaoTest {
     @MethodSource("corposInvalidos")
     void rejeitaDadosInvalidosSemGravar(String corpo) throws Exception {
         corpo = corpo.replace("PRODUTO_ID", produtoId.toString());
-        mvc.perform(post("/api/movimentacoes").contentType(APPLICATION_JSON).content(corpo))
+        mvc.perform(post("/api/movimentacoes").with(csrf()).contentType(APPLICATION_JSON).content(corpo))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.mensagem").isNotEmpty());
         assertEquals(6, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
@@ -280,9 +283,9 @@ class RegistroMovimentacaoTest {
     @Test
     void historicoNaoDisponibilizaEdicaoOuExclusao() throws Exception {
         var operacao = servico.registrar(dados(TipoMovimentacao.SAIDA, 2));
-        mvc.perform(put("/api/movimentacoes/{id}", operacao.id()).contentType(APPLICATION_JSON).content("{}"))
+        mvc.perform(put("/api/movimentacoes/{id}", operacao.id()).with(csrf()).contentType(APPLICATION_JSON).content("{}"))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(delete("/api/movimentacoes/{id}", operacao.id())).andExpect(status().is4xxClientError());
+        mvc.perform(delete("/api/movimentacoes/{id}", operacao.id()).with(csrf())).andExpect(status().is4xxClientError());
         assertEquals(1, movimentacoes.count());
         assertEquals(4, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
     }
