@@ -36,9 +36,22 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 - `tela-2-movimentacao.png`
 - `tela-3-resultado.png`
 
-## Status
+## Desenvolvimento incremental
 
-Estrutura inicial do projeto. A aplicação ainda não foi implementada e não há comandos de execução nesta etapa.
+A base Java 21/Spring Boot está criada. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
+
+As funcionalidades de estoque, o banco de dados e a autenticação serão implementados nas próximas etapas. Esta versão ainda não é o MVP funcional.
+
+## Execução da base técnica
+
+Pré-requisitos: JDK 21 e Maven 3.6.3 ou superior. Confira se `JAVA_HOME` aponta para o JDK 21.
+
+```sh
+mvn verify
+mvn spring-boot:run
+```
+
+A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Nesta etapa não há telas nem endpoints de negócio; uma resposta 404 em `/` é esperada. O PostgreSQL e as instruções de configuração serão adicionados na etapa 2.
 
 ## Cuidados com o repositório público
 

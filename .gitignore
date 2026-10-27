@@ -13,6 +13,7 @@ application-local.yaml
 target/
 build/
 .gradle/
+.maven-cache/
 
 # IDEs e editores
 .idea/
