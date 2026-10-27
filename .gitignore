@@ -1,0 +1,33 @@
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+application-local.yaml
+*.pem
+*.key
+
+# Java e ferramentas de build
+*.class
+target/
+build/
+.gradle/
+
+# IDEs e editores
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Dependências de frontend
+node_modules/
+dist/
+
+# Logs e arquivos do sistema
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
