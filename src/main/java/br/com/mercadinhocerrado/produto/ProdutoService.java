@@ -25,8 +25,12 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public PaginaProdutosResponse listar(String nome, int pagina, int tamanho) {
+    public PaginaProdutosResponse listar(String nome, boolean reposicao, int pagina, int tamanho) {
         var paginacao = PageRequest.of(pagina, tamanho, Sort.by("nome").ascending().and(Sort.by("id")));
+        if (reposicao) {
+            var busca = nome.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+            return PaginaProdutosResponse.de(produtos.buscarReposicao("%" + busca + "%", paginacao));
+        }
         return PaginaProdutosResponse.de(produtos.findByNomeContainingIgnoreCase(nome.strip(), paginacao));
     }
 

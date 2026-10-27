@@ -52,7 +52,7 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como o registro transacional de entradas e saídas. Consulta de histórico, filtros de reposição, interface e autenticação serão adicionados nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. Interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
 
 ## Execução da base técnica
 
@@ -176,6 +176,21 @@ Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/movimentacoes -Con
 
 Dados inválidos retornam **400**, produto inexistente retorna **404** e saldo insuficiente, excesso de saldo ou reutilização incompatível do UUID retornam **409**. Essas rejeições não alteram saldo nem histórico. O registro e a atualização do saldo participam da mesma transação; uma falha de gravação desfaz a operação. O bloqueio de linha serializa operações concorrentes no mesmo produto. O endpoint ainda não exige login nesta versão intermediária.
 
+## Reposição e histórico (RF05/RF06)
+
+Para consultar apenas produtos com quantidade menor ou igual ao estoque mínimo, utilize `GET /api/produtos?reposicao=true`. O filtro pode ser combinado com `nome`, `pagina` e `tamanho`; sem ele, a listagem continua exibindo todos os produtos. Estoque e mínimo iguais a zero também indicam necessidade de reposição.
+
+O histórico somente para leitura está disponível em `GET /api/movimentacoes`, com filtros opcionais `produtoId` e `tipo` (`ENTRADA` ou `SAIDA`). A paginação segue os mesmos limites dos produtos: `pagina` de 0 a 1.000.000 e `tamanho` de 1 a 100, padrão 20. A resposta contém `itens`, `pagina`, `tamanho`, `totalItens` e `totalPaginas`.
+
+```powershell
+Invoke-RestMethod 'http://localhost:8080/api/produtos?reposicao=true&pagina=0&tamanho=20'
+Invoke-RestMethod 'http://localhost:8080/api/movimentacoes?produtoId=1&tipo=SAIDA&pagina=0&tamanho=20'
+```
+
+Os movimentos são ordenados por data decrescente e, em caso de empate, por identificador decrescente. Cada item inclui os dados da operação e `produtoNome`, que representa o nome atual do cadastro. Saldo anterior, saldo resultante, mínimo e necessidade de reposição representam o momento da operação, sem serem recalculados com o estoque atual.
+
+Registros anteriores à migração V2 podem não ter resultado de saldo armazenado; nesses casos, `idOperacao`, `saldoAnterior`, `saldoAtual`, `estoqueMinimo` e `reposicaoNecessaria` são `null`. A interface deverá apresentar essas informações como não registradas. Filtros sem resultados retornam uma página vazia; filtrar por produto inexistente retorna **404**, e filtros inválidos retornam **400**. Não há endpoints para editar ou excluir movimentos. Essas consultas ainda não exigem login nesta versão intermediária.
+
 ## Migrações e testes
 
 O Flyway executa as migrações em `src/main/resources/db/migration/` na inicialização e registra as versões aplicadas na tabela `flyway_schema_history`. A primeira migração cria `produto` e `movimentacao`, com chaves estrangeiras e restrições para quantidades, preço e tipo de operação. Produtos com movimentações não podem ser excluídos.
@@ -184,15 +199,17 @@ O Hibernate apenas valida o esquema (`ddl-auto=validate`); novas alterações de
 
 A migração V2 acrescenta o identificador de operação e o resultado histórico (saldo anterior, saldo resultante e mínimo na ocasião), com unicidade por produto e operação. Registros anteriores são preservados com esses novos campos nulos, pois seus resultados originais não foram coletados.
 
+A migração V3 acrescenta um índice de data e identificador para a ordenação do histórico global. A consulta carrega os produtos junto com os movimentos, evitando uma consulta adicional por item.
+
 ```sh
 mvn verify
 ```
 
-Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. O cadastro é testado com MockMvc e persistência real, incluindo dados válidos, limites, campos ausentes, tipos inválidos, quantidades fracionadas e tentativa de injeção SQL tratada como texto. Nenhum teste substitui a futura regra transacional de atualização de saldo.
+Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. O cadastro é testado com MockMvc e persistência real, incluindo dados válidos, limites, campos ausentes, tipos inválidos, quantidades fracionadas e tentativa de injeção SQL tratada como texto.
 
 Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [suporte PostgreSQL no Flyway](https://documentation.red-gate.com/flyway/reference/database-driver-reference/postgresql-database).
 
-A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. A suíte atual contém 71 testes.
+A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. A suíte atual contém 84 testes.
 
 ## Cuidados com o repositório público
 

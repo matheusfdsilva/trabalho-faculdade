@@ -23,9 +23,10 @@ public class ProdutoController {
     @GetMapping
     public PaginaProdutosResponse listar(
             @RequestParam(defaultValue = "") @Size(max = 150) String nome,
+            @RequestParam(defaultValue = "false") boolean reposicao,
             @RequestParam(defaultValue = "0") @Min(0) @Max(1_000_000) int pagina,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) int tamanho) {
-        return produtos.listar(nome, pagina, tamanho);
+        return produtos.listar(nome, reposicao, pagina, tamanho);
     }
 
     @GetMapping("/{id}")

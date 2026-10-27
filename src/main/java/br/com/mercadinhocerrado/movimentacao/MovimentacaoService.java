@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
 @Validated
@@ -16,6 +18,15 @@ public class MovimentacaoService {
     public MovimentacaoService(ProdutoRepository produtos, MovimentacaoRepository movimentacoes) {
         this.produtos = produtos;
         this.movimentacoes = movimentacoes;
+    }
+
+    @Transactional(readOnly = true)
+    public PaginaMovimentacoesResponse listar(Long produtoId, TipoMovimentacao tipo, int pagina, int tamanho) {
+        if (produtoId != null && !produtos.existsById(produtoId)) {
+            throw new ProdutoNaoEncontradoException();
+        }
+        var paginacao = PageRequest.of(pagina, tamanho, Sort.by(Sort.Direction.DESC, "dataMovimentacao", "id"));
+        return PaginaMovimentacoesResponse.de(movimentacoes.buscarHistorico(produtoId, tipo, paginacao));
     }
 
     @Transactional

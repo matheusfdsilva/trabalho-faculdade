@@ -35,7 +35,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroApi tratarParametrosInvalidos() {
-        return new ErroApi("Confira os parâmetros: identificador positivo, nome de até 150 caracteres, página de 0 a 1000000 e tamanho de 1 a 100.", List.of());
+        return new ErroApi("Confira os parâmetros: identificador positivo, nome de até 150 caracteres, tipo ENTRADA ou SAIDA, reposicao true ou false, página de 0 a 1000000 e tamanho de 1 a 100.", List.of());
     }
 
     @ExceptionHandler(ProdutoNaoEncontradoException.class)

@@ -12,6 +12,13 @@ import java.util.Optional;
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     Page<Produto> findByNomeContainingIgnoreCase(String nome, Pageable paginacao);
 
+    @Query("""
+            select p from Produto p
+            where p.quantidadeEstoque <= p.estoqueMinimo
+            and lower(p.nome) like lower(:nome) escape '\\'
+            """)
+    Page<Produto> buscarReposicao(@Param("nome") String nome, Pageable paginacao);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Produto p where p.id = :id")
     Optional<Produto> buscarParaAlteracao(@Param("id") Long id);

@@ -26,7 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = "spring.config.import=")
@@ -198,6 +198,93 @@ class RegistroMovimentacaoTest {
         assertEquals(List.of(true, true), executarSimultaneamente(operacao, operacao));
         assertEquals(4, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
         assertEquals(1, movimentacoes.count());
+    }
+
+    @Test
+    void historicoVazioRetornaMetadadosDePaginacao() throws Exception {
+        mvc.perform(get("/api/movimentacoes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.itens").isEmpty())
+                .andExpect(jsonPath("$.totalItens").value(0))
+                .andExpect(jsonPath("$.tamanho").value(20));
+    }
+
+    @Test
+    void historicoFiltraProdutoETipoEMantemResultadoDaOperacao() throws Exception {
+        var saida = servico.registrar(dados(TipoMovimentacao.SAIDA, 2));
+        servico.registrar(dados(TipoMovimentacao.ENTRADA, 10));
+        var outro = produtos.save(new Produto("Arroz", "Alimentos", BigDecimal.ONE, 10, 1));
+        servico.registrar(new RegistroMovimentacaoRequest(UUID.randomUUID(), outro.getId(), TipoMovimentacao.SAIDA, 1));
+        mvc.perform(get("/api/movimentacoes").param("produtoId", produtoId.toString()).param("tipo", "SAIDA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItens").value(1))
+                .andExpect(jsonPath("$.itens[0].id").value(saida.id().intValue()))
+                .andExpect(jsonPath("$.itens[0].produtoNome").value("Óleo de Soja 900 ml"))
+                .andExpect(jsonPath("$.itens[0].saldoAnterior").value(6))
+                .andExpect(jsonPath("$.itens[0].saldoAtual").value(4))
+                .andExpect(jsonPath("$.itens[0].reposicaoNecessaria").value(true));
+        mvc.perform(get("/api/movimentacoes").param("tipo", "ENTRADA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItens").value(1));
+        assertEquals(14, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
+    }
+
+    @Test
+    void historicoOrdenaMaisRecentesPrimeiro() throws Exception {
+        var antiga = servico.registrar(dados(TipoMovimentacao.ENTRADA, 1));
+        var recente = servico.registrar(dados(TipoMovimentacao.SAIDA, 1));
+        jdbc.update("UPDATE movimentacao SET data_movimentacao = '2026-01-01T00:00:00Z' WHERE id_movimentacao = ?", antiga.id());
+        mvc.perform(get("/api/movimentacoes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.itens[0].id").value(recente.id().intValue()))
+                .andExpect(jsonPath("$.itens[1].id").value(antiga.id().intValue()));
+    }
+
+    @Test
+    void historicoPaginaComDesempatePorIdEPreservaCamposDesconhecidosDoLegado() throws Exception {
+        Long ultimoId = null;
+        for (int i = 0; i < 25; i++) {
+            ultimoId = jdbc.queryForObject("""
+                    INSERT INTO movimentacao (id_produto, tipo, quantidade, data_movimentacao)
+                    VALUES (?, 'ENTRADA', 1, '2026-01-01T00:00:00Z') RETURNING id_movimentacao
+                    """, Long.class, produtoId);
+        }
+        mvc.perform(get("/api/movimentacoes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.itens.length()").value(20))
+                .andExpect(jsonPath("$.itens[0].id").value(ultimoId.intValue()))
+                .andExpect(jsonPath("$.totalPaginas").value(2))
+                .andExpect(jsonPath("$.totalItens").value(25))
+                .andExpect(jsonPath("$.itens[0].saldoAnterior").value(org.hamcrest.Matchers.nullValue()))
+                .andExpect(jsonPath("$.itens[0].saldoAtual").value(org.hamcrest.Matchers.nullValue()))
+                .andExpect(jsonPath("$.itens[0].reposicaoNecessaria").value(org.hamcrest.Matchers.nullValue()));
+        mvc.perform(get("/api/movimentacoes").param("pagina", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.itens.length()").value(5))
+                .andExpect(jsonPath("$.itens[0].id").value(ultimoId.intValue() - 20));
+        assertEquals(6, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
+    }
+
+    @Test
+    void historicoDeProdutoInexistenteRetorna404() throws Exception {
+        mvc.perform(get("/api/movimentacoes").param("produtoId", Long.toString(Long.MAX_VALUE)))
+                .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"?produtoId=0", "?tipo=VENDA", "?pagina=-1", "?tamanho=101"})
+    void historicoRejeitaFiltrosInvalidos(String parametros) throws Exception {
+        mvc.perform(get("/api/movimentacoes" + parametros)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void historicoNaoDisponibilizaEdicaoOuExclusao() throws Exception {
+        var operacao = servico.registrar(dados(TipoMovimentacao.SAIDA, 2));
+        mvc.perform(put("/api/movimentacoes/{id}", operacao.id()).contentType(APPLICATION_JSON).content("{}"))
+                .andExpect(status().is4xxClientError());
+        mvc.perform(delete("/api/movimentacoes/{id}", operacao.id())).andExpect(status().is4xxClientError());
+        assertEquals(1, movimentacoes.count());
+        assertEquals(4, produtos.findById(produtoId).orElseThrow().getQuantidadeEstoque());
     }
 
     private List<Boolean> executarSimultaneamente(RegistroMovimentacaoRequest primeira,

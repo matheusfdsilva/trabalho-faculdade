@@ -203,6 +203,42 @@ class ManutencaoProdutoTest {
                 .andExpect(jsonPath("$.mensagem").isNotEmpty());
     }
 
+    @Test
+    void reposicaoIncluiSaldoIgualAoMinimoEAbaixoDele() throws Exception {
+        produtos.save(new Produto("Arroz baixo", "Alimentos", BigDecimal.ONE, 4, 5));
+        produtos.save(new Produto("Feijão no mínimo", "Alimentos", BigDecimal.ONE, 5, 5));
+        produtos.save(new Produto("Óleo zerado", "Alimentos", BigDecimal.ONE, 0, 0));
+        salvar("Produto normal");
+        mvc.perform(get("/api/produtos").param("reposicao", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItens").value(3));
+        mvc.perform(get("/api/produtos").param("reposicao", "false"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItens").value(4));
+    }
+
+    @Test
+    void reposicaoCombinaBuscaEPaginacaoSemInterpretarCuringas() throws Exception {
+        produtos.save(new Produto("Arroz 100% A", "Alimentos", BigDecimal.ONE, 1, 5));
+        produtos.save(new Produto("Arroz 100% B", "Alimentos", BigDecimal.ONE, 2, 5));
+        produtos.save(new Produto("Arroz integral", "Alimentos", BigDecimal.ONE, 1, 5));
+        salvar("Arroz 100% normal");
+        mvc.perform(get("/api/produtos").param("reposicao", "true")
+                        .param("nome", "  ARROZ 100% ").param("tamanho", "1").param("pagina", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItens").value(2))
+                .andExpect(jsonPath("$.itens[0].nome").value("Arroz 100% B"));
+    }
+
+    @Test
+    void reposicaoSemResultadosRetornaPaginaVazia() throws Exception {
+        salvar("Arroz");
+        mvc.perform(get("/api/produtos").param("reposicao", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.itens").isEmpty())
+                .andExpect(jsonPath("$.totalItens").value(0));
+    }
+
     private void registrarHistorico(Long id) {
         jdbc.update("INSERT INTO movimentacao (id_produto, tipo, quantidade) VALUES (?, 'ENTRADA', 1)", id);
     }
