@@ -39,6 +39,13 @@ public class Produto {
         this.estoqueMinimo = estoqueMinimo;
     }
 
+    public void editar(String nome, String categoria, BigDecimal preco, Integer estoqueMinimo) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.estoqueMinimo = estoqueMinimo;
+    }
+
     public Long getId() { return id; }
     public String getNome() { return nome; }
     public String getCategoria() { return categoria; }

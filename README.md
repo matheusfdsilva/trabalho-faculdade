@@ -52,7 +52,7 @@ A pasta `prototipo/` está reservada para as imagens das telas. Quando disponív
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro de produtos via API está implementado. Consulta, edição, exclusão, movimentações, interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados. Movimentações, interface e autenticação serão adicionadas nas próximas etapas. Esta versão ainda não é o MVP funcional.
 
 ## Execução da base técnica
 
@@ -111,9 +111,38 @@ O retorno é HTTP **201**, com o identificador gerado e os dados gravados. Cada 
 
 Todos os campos são obrigatórios. Nome e categoria aceitam, respectivamente, até 150 e 80 caracteres, sem marcações HTML ou caracteres de controle. O preço deve estar entre zero e 99.999.999,99, com até duas casas decimais. Quantidade e estoque mínimo devem ser inteiros entre zero e 2.147.483.647. Zero é aceito para preço e saldos. O saldo informado é o estoque inicial; futuras alterações serão feitas por movimentações.
 
-Dados inválidos retornam HTTP **400**, sem cadastrar o produto. Erros de validação incluem `mensagem` e a lista `campos`, com o nome do campo e uma orientação. JSON malformado ou tipos incompatíveis retornam uma mensagem geral sem detalhes internos.
+Dados inválidos retornam HTTP **400**, sem cadastrar o produto. Erros de validação incluem `mensagem` e a lista `campos`, com o nome do campo e uma orientação. JSON malformado, campos desconhecidos ou tipos incompatíveis retornam uma mensagem geral sem detalhes internos.
 
 A autenticação será implementada na etapa 7; o endpoint ainda não exige login nesta versão intermediária.
+
+## Consulta e manutenção de produtos (RF02)
+
+| Método | Rota | Resultado |
+| --- | --- | --- |
+| GET | `/api/produtos` | Lista paginada, com busca opcional por nome |
+| GET | `/api/produtos/{id}` | Dados de um produto |
+| PUT | `/api/produtos/{id}` | Atualiza nome, categoria, preço e estoque mínimo |
+| DELETE | `/api/produtos/{id}` | Exclui apenas produtos sem histórico |
+
+A listagem aceita `nome` (trecho do nome, até 150 caracteres, sem distinguir maiúsculas de minúsculas), `pagina` (inicia em 0, até 1.000.000) e `tamanho` (padrão 20, de 1 a 100). A ordenação é por nome e, em caso de empate, identificador. `%` e `_` são tratados como texto na busca. A resposta contém `itens`, `pagina`, `tamanho`, `totalItens` e `totalPaginas`. Páginas além do final retornam uma lista vazia.
+
+```powershell
+Invoke-RestMethod 'http://localhost:8080/api/produtos?nome=arroz&pagina=0&tamanho=20'
+Invoke-RestMethod 'http://localhost:8080/api/produtos/1'
+```
+
+Na edição, envie todos os quatro campos abaixo. As validações são as mesmas do cadastro, mas `quantidadeEstoque` não é aceito: o saldo será alterado exclusivamente por movimentações. O retorno HTTP **200** inclui o produto atualizado.
+
+```json
+{
+  "nome": "Arroz integral 1 kg",
+  "categoria": "Grãos",
+  "preco": 19.90,
+  "estoqueMinimo": 10
+}
+```
+
+A exclusão retorna HTTP **204**, sem corpo. Se houver movimentações, retorna **409** com uma mensagem explicativa, preservando o produto e o histórico. Consulta, edição e exclusão de um identificador inexistente retornam **404**. Identificadores não positivos ou parâmetros inválidos retornam **400**. Edição e exclusão utilizam bloqueio da linha dentro da transação, e a chave estrangeira mantém a proteção do histórico no banco.
 
 ## Migrações e testes
 
@@ -128,6 +157,8 @@ mvn verify
 Os testes utilizam Testcontainers para criar um PostgreSQL temporário e independente do banco de desenvolvimento. O Docker precisa estar disponível, mas não é necessário iniciar o Compose nem configurar `.env` para esses testes. Eles verificam reaplicação das migrações, bloqueio de saldo negativo, validação de movimentações e preservação do histórico. O cadastro é testado com MockMvc e persistência real, incluindo dados válidos, limites, campos ausentes, tipos inválidos, quantidades fracionadas e tentativa de injeção SQL tratada como texto. Nenhum teste substitui a futura regra transacional de atualização de saldo.
 
 Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [suporte PostgreSQL no Flyway](https://documentation.red-gate.com/flyway/reference/database-driver-reference/postgresql-database).
+
+A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. A suíte atual contém 51 testes.
 
 ## Cuidados com o repositório público
 

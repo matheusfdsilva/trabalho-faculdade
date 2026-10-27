@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import br.com.mercadinhocerrado.produto.ProdutoNaoEncontradoException;
+import br.com.mercadinhocerrado.produto.ProdutoComHistoricoException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -24,6 +28,24 @@ public class ApiExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroApi tratarJsonInvalido() {
-        return new ErroApi("Envie um JSON válido com os tipos esperados. Quantidades devem ser números inteiros.", List.of());
+        return new ErroApi("Envie um JSON válido apenas com os campos aceitos e os tipos esperados. Quantidades devem ser números inteiros.", List.of());
+    }
+
+    @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentTypeMismatchException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroApi tratarParametrosInvalidos() {
+        return new ErroApi("Confira os parâmetros: identificador positivo, nome de até 150 caracteres, página de 0 a 1000000 e tamanho de 1 a 100.", List.of());
+    }
+
+    @ExceptionHandler(ProdutoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErroApi tratarProdutoNaoEncontrado(ProdutoNaoEncontradoException erro) {
+        return new ErroApi(erro.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(ProdutoComHistoricoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroApi tratarProdutoComHistorico(ProdutoComHistoricoException erro) {
+        return new ErroApi(erro.getMessage(), List.of());
     }
 }
