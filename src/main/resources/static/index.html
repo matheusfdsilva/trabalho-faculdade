@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estoque · Mercadinho Cerrado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/estoque.js"></script>
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo</a>
+  <div class="app-shell" id="aplicacao" hidden>
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="/" aria-label="Mercadinho Cerrado, início"><span class="brand-symbol" aria-hidden="true">m<span>•</span></span><span>mercadinho<br><strong>cerrado</strong></span></a>
+      <p class="nav-label">SEU MERCADINHO</p>
+      <nav><a class="nav-item active" href="/" aria-current="page"><span aria-hidden="true">▦</span> Estoque</a><button class="nav-item" id="nav-cadastrar"><span aria-hidden="true">＋</span> Cadastrar produto</button></nav>
+      <div class="sidebar-note"><span class="note-dot" aria-hidden="true"></span><p>Um estoque organizado<br>faz a diferença todos os dias.</p></div>
+      <p class="sidebar-footer">MVP · Mercadinho Cerrado</p>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span class="breadcrumb">Gestão do mercadinho <span aria-hidden="true">/</span> <strong>Estoque</strong></span><div class="account"><span class="avatar" aria-hidden="true">U</span><span id="usuario"></span><button class="button quiet" id="sair">Sair <span aria-hidden="true">↗</span></button></div></header>
+      <main id="conteudo" class="content" tabindex="-1">
+        <div class="page-heading"><div><p class="eyebrow">TUDO NO LUGAR</p><h1>Controle de estoque</h1><p class="muted">Acompanhe seus produtos e saiba o que precisa de atenção.</p></div><button class="button primary" id="cadastrar"><span aria-hidden="true">＋</span> Cadastrar produto</button></div>
+        <div id="mensagem" class="notice" role="status" tabindex="-1" hidden></div>
+        <section class="summary-grid" aria-label="Resumo do estoque">
+          <article class="summary-card"><span class="summary-icon" aria-hidden="true">▦</span><div><p>Produtos cadastrados</p><strong id="total-produtos">—</strong><span>Itens no seu catálogo</span></div></article>
+          <article class="summary-card attention"><span class="summary-icon" aria-hidden="true">!</span><div><p>Precisam de reposição</p><strong id="total-reposicao">—</strong><span>Saldo no mínimo ou abaixo</span></div></article>
+        </section>
+        <section class="inventory-panel" aria-labelledby="titulo-lista">
+          <div class="panel-heading"><div><h2 id="titulo-lista">Produtos em estoque</h2><p class="muted">Consulte e mantenha seu catálogo atualizado.</p></div><span class="page-size">20 por página</span></div>
+          <form id="filtros" class="filters"><div class="search-field"><label for="busca">Buscar produto</label><div class="search-control"><span aria-hidden="true">⌕</span><input id="busca" name="nome" type="search" maxlength="150" placeholder="Digite o nome do produto"><button class="button secondary" type="submit">Buscar</button></div></div><label class="checkbox-field" for="reposicao"><input id="reposicao" type="checkbox"> Somente reposição</label><button class="button quiet" type="button" id="limpar">Limpar filtros</button></form>
+          <p id="estado-lista" class="list-state" role="status">Carregando produtos…</p>
+          <div id="lista" aria-busy="false"><table id="tabela" hidden><caption class="sr-only">Produtos cadastrados, saldos e ações disponíveis</caption><thead><tr><th scope="col">Produto</th><th scope="col">Preço</th><th scope="col">Em estoque</th><th scope="col">Mínimo</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead><tbody id="produtos"></tbody></table></div>
+          <div class="pagination"><p id="resumo-lista" aria-live="polite"></p><div><button class="button secondary" id="anterior" disabled>← Anterior</button><button class="button secondary" id="proxima" disabled>Próxima →</button></div></div>
+        </section>
+        <footer class="content-footer">Informações claras para decisões mais simples.<span>Mercadinho Cerrado</span></footer>
+      </main>
+    </div>
+  </div>
+  <p id="iniciando" class="loading-screen" role="status">Preparando seu estoque…</p>
+  <dialog id="produto-dialog" aria-labelledby="titulo-form">
+    <form id="produto-form"><div class="dialog-heading"><div><p class="eyebrow">CATÁLOGO</p><h2 id="titulo-form">Cadastrar produto</h2></div><button type="button" class="icon-button fechar" aria-label="Fechar formulário">×</button></div><p class="muted">Todos os campos são obrigatórios.</p><div id="erro-produto" class="notice error" role="alert" tabindex="-1" hidden></div>
+      <div class="form-grid"><div class="wide"><label for="nome">Nome do produto</label><input id="nome" name="nome" maxlength="150" required aria-describedby="erro-nome"><span class="field-error" id="erro-nome"></span></div><div class="wide"><label for="categoria">Categoria</label><input id="categoria" name="categoria" maxlength="80" required aria-describedby="erro-categoria"><span class="field-error" id="erro-categoria"></span></div><div><label for="preco">Preço unitário (R$)</label><input id="preco" name="preco" type="number" min="0" max="99999999.99" step="0.01" required aria-describedby="erro-preco"><span class="field-error" id="erro-preco"></span></div><div id="campo-quantidade"><label for="quantidadeEstoque">Estoque inicial (un.)</label><input id="quantidadeEstoque" name="quantidadeEstoque" type="number" min="0" max="2147483647" step="1" required aria-describedby="erro-quantidadeEstoque"><span class="field-error" id="erro-quantidadeEstoque"></span></div><div><label for="estoqueMinimo">Estoque mínimo (un.)</label><input id="estoqueMinimo" name="estoqueMinimo" type="number" min="0" max="2147483647" step="1" required aria-describedby="erro-estoqueMinimo"><span class="field-error" id="erro-estoqueMinimo"></span></div></div>
+      <p id="aviso-saldo" class="form-hint" hidden>O saldo é alterado por movimentações e permanece igual nesta edição.</p><div class="dialog-actions"><button class="button secondary fechar" type="button">Cancelar</button><button class="button primary" type="submit" id="salvar">Cadastrar produto</button></div>
+    </form>
+  </dialog>
+  <dialog id="excluir-dialog" aria-labelledby="titulo-excluir"><form id="excluir-form"><div class="dialog-heading"><h2 id="titulo-excluir">Excluir produto?</h2><button class="icon-button fechar-excluir" type="button" aria-label="Fechar confirmação">×</button></div><p id="produto-excluir"></p><p class="muted">Esta ação remove o produto do catálogo. Produtos com histórico de movimentações são preservados.</p><div id="erro-excluir" class="notice error" role="alert" tabindex="-1" hidden></div><div class="dialog-actions"><button class="button secondary fechar-excluir" type="button" autofocus>Cancelar</button><button class="button danger" type="submit" id="confirmar-exclusao">Excluir produto</button></div></form></dialog>
+</body>
+</html>

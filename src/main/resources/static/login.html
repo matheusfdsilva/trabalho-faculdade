@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · Mercadinho Cerrado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/login.js"></script>
+</head>
+<body class="login-page">
+  <main class="login-layout">
+    <section class="login-story" aria-labelledby="marca">
+      <div class="brand"><span class="brand-symbol" aria-hidden="true">m<span>•</span></span><span id="marca">mercadinho<br><strong>cerrado</strong></span></div>
+      <div class="story-copy"><p class="eyebrow">CUIDADO EM CADA DETALHE</p><h1>Estoque em ordem.<br>Rotina mais leve.</h1><p>Mais clareza para cuidar dos produtos e mais tempo para cuidar do seu negócio.</p><div class="story-tags"><span>Produtos organizados</span><span>Estoque atualizado</span></div></div>
+      <p class="story-footer">Controle de estoque · Projeto acadêmico</p>
+    </section>
+    <section class="login-panel" aria-labelledby="titulo-login">
+      <div class="login-card"><p class="eyebrow">BEM-VINDO DE VOLTA</p><h2 id="titulo-login">Vamos começar?</h2><p class="muted">Entre com sua conta para acessar o estoque.</p>
+        <div id="mensagem" class="notice error" role="alert" tabindex="-1" hidden></div>
+        <form id="login-form">
+          <label for="username">Usuário</label><input id="username" name="username" autocomplete="username" maxlength="80" required placeholder="Seu usuário">
+          <label for="password">Senha</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Sua senha">
+          <button class="button primary full" type="submit" id="entrar">Entrar no sistema <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="login-help">Precisa de uma conta ou de ajuda com o acesso?<br>Fale com o responsável pelo sistema.</p>
+      </div>
+      <p class="panel-footer">Mercadinho Cerrado · Simples para o dia a dia</p>
+    </section>
+  </main>
+</body>
+</html>

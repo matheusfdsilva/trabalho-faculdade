@@ -23,7 +23,9 @@ O comando cria a conta e encerra a aplicação, sem abrir um servidor HTTP. Exec
 
 ## Login pela API
 
-Inicie a aplicação normalmente com `mvn spring-boot:run`. A tela de login será implementada na próxima etapa. Por enquanto, utilize uma sessão HTTP:
+Inicie a aplicação normalmente com `mvn spring-boot:run` e acesse `http://localhost:8080`. A tela de login solicita usuário e senha e, após a autenticação, apresenta o estoque. O botão Sair encerra a sessão. Se a sessão expirar, a interface solicita um novo login.
+
+Para utilizar diretamente a API pelo PowerShell, inicie uma sessão HTTP:
 
 ```powershell
 $csrf = Invoke-RestMethod http://localhost:8080/api/auth/csrf -SessionVariable sessao

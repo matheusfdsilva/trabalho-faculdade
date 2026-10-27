@@ -42,17 +42,19 @@ mercadinho-cerrado-mvp/
     └── .gitkeep
 ```
 
-A pasta `prototipo/` está reservada para as imagens das telas. Quando disponíveis, adicione os arquivos:
+A pasta `prototipo/` contém capturas reais da interface da etapa 8, com conta e produtos fictícios:
 
-- `tela-1-inicial.png`
-- `tela-2-movimentacao.png`
-- `tela-3-resultado.png`
+- `tela-login.png`: entrada no sistema.
+- `tela-1-inicial.png`: consulta do estoque em computador.
+- `tela-1-celular.png`: consulta do estoque em largura de 320 px.
+
+As capturas da movimentação e do resultado serão adicionadas com a implementação dessas telas na etapa 9.
 
 ## Desenvolvimento incremental
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A autenticação está implementada; a interface será adicionada nas próximas etapas. Esta versão ainda não é o MVP funcional.
+O cadastro, a consulta, a edição e a exclusão protegida de produtos via API estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A autenticação e as telas de login, estoque e produtos estão disponíveis. A interface de movimentações e resultados será implementada na etapa 9.
 
 ## Execução da base técnica
 
@@ -76,13 +78,17 @@ docker compose up -d --wait
 mvn spring-boot:run
 ```
 
-A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Nesta etapa não há telas; uma resposta 404 em `/` é esperada. O cadastro pode ser utilizado pela API descrita abaixo.
+A aplicação utiliza a porta 8080 por padrão, configurável pela variável `PORT`. Acesse [http://localhost:8080](http://localhost:8080) pelo navegador. Sem uma sessão, a interface direciona para a tela de login. Crie uma conta seguindo o [guia de autenticação](docs/AUTENTICACAO.md).
+
+Após entrar, você pode consultar o estoque, pesquisar por nome, filtrar produtos que precisam de reposição e navegar pelas páginas. Os cartões de resumo mostram os totais do catálogo inteiro, independentemente dos filtros. O botão **Cadastrar produto** abre o formulário de cadastro; cada produto oferece as ações **Editar** e **Excluir**. A exclusão exige confirmação e preserva produtos com histórico. O saldo inicial é informado no cadastro e não pode ser alterado na edição.
+
+A interface utiliza HTML, CSS e JavaScript nativos, servidos pela própria aplicação, sem dependências externas de frontend. As telas se adaptam a computadores e celulares; no celular, os produtos são apresentados em cartões. Os controles têm rótulos, foco visível e alertas com texto e símbolo. Os diálogos permitem navegação por teclado e fechamento com Escape. Mensagens de conexão não provocam reenvio automático de gravações.
 
 O PostgreSQL 16 fica acessível apenas no computador local, na porta definida por `DB_PORT` (padrão 5432). Se ela estiver ocupada, altere `DB_PORT` no `.env` antes de iniciar. O Compose mantém os dados em um volume persistente. Para parar os serviços sem apagar os dados, execute `docker compose down`.
 
 ## Autenticação
 
-Siga o [guia de autenticação](docs/AUTENTICACAO.md) para criar contas e iniciar uma sessão. Não existe conta padrão nem cadastro público. Todas as APIs de negócio exigem login; operações que alteram dados também exigem token CSRF. Os exemplos abaixo pressupõem as variáveis `$sessao` e `$cabecalhos` obtidas nesse guia. A tela de login será implementada na próxima etapa.
+Siga o [guia de autenticação](docs/AUTENTICACAO.md) para criar contas e iniciar uma sessão. Não existe conta padrão nem cadastro público. Todas as APIs de negócio exigem login; operações que alteram dados também exigem token CSRF. Os exemplos abaixo pressupõem as variáveis `$sessao` e `$cabecalhos` obtidas nesse guia. Pela interface, o gerenciamento da sessão e dos tokens CSRF é automático.
 
 ## Cadastro de produtos (RF01)
 
@@ -218,6 +224,8 @@ Referências: [imagem oficial PostgreSQL](https://hub.docker.com/_/postgres) e [
 A manutenção também é testada com PostgreSQL real: paginação sem sobreposição em nomes repetidos, busca, consulta individual, edição sem alteração de saldo, exclusão com e sem histórico, identificadores inexistentes e rejeição de parâmetros ou edições inválidas. Os testes de movimentação verificam entradas, saídas, estoque zerado, saldo insuficiente, overflow, reenvios, concorrência e rollback mediante falha simulada no banco. Os testes de consulta cobrem reposição no limite mínimo, combinação de filtros, ordenação, paginação do histórico e registros antigos sem resultado armazenado. Os testes de segurança verificam sessões, CSRF, logout, bcrypt, bloqueio de conta e criação administrativa de usuários.
 
 A suíte completa passou com **95 testes**, sem falhas ou testes ignorados.
+
+Na etapa 8, os fluxos de login válido/inválido, cadastro, edição, exclusão permitida e bloqueada por histórico, pesquisa, reposição, paginação e logout também foram executados no Chrome com PostgreSQL isolado. Foram conferidas larguras de 320, 720 e 1440 px e ampliação de texto de 200%, sem rolagem horizontal ou erros de JavaScript. Essas verificações técnicas não substituem a validação externa com usuários nem a futura medição de desempenho.
 
 ## Cuidados com o repositório público
 
