@@ -1,0 +1,118 @@
+{
+  "dataExecucao": "2026-10-28T20:22:10-03:00",
+  "ferramenta": "JaCoCo 0.8.15",
+  "escopo": "Backend Java, sem exclusoes de classes configuradas; nao inclui HTML/CSS/JavaScript.",
+  "metricaFormulario": "Cobertura de instrucoes: percentual inteiro exibido na linha Total do JaCoCo.",
+  "valorFormulario": 98,
+  "testes": 108,
+  "unitarios": 11,
+  "integracao": 97,
+  "falhas": 0,
+  "erros": 0,
+  "ignorados": 0,
+  "tempoMavenSegundos": 56.438,
+  "tempoSuitesSegundos": 44.13,
+  "cobertura": {
+    "INSTRUCTION": {
+      "coberto": 1355,
+      "naoCoberto": 14,
+      "total": 1369,
+      "percentual": 98.9774
+    },
+    "BRANCH": {
+      "coberto": 57,
+      "naoCoberto": 9,
+      "total": 66,
+      "percentual": 86.3636
+    },
+    "LINE": {
+      "coberto": 242,
+      "naoCoberto": 3,
+      "total": 245,
+      "percentual": 98.7755
+    },
+    "COMPLEXITY": {
+      "coberto": 128,
+      "naoCoberto": 10,
+      "total": 138,
+      "percentual": 92.7536
+    },
+    "METHOD": {
+      "coberto": 104,
+      "naoCoberto": 1,
+      "total": 105,
+      "percentual": 99.0476
+    },
+    "CLASS": {
+      "coberto": 31,
+      "naoCoberto": 0,
+      "total": 31,
+      "percentual": 100.0
+    }
+  },
+  "suites": [
+    {
+      "classe": "br.com.mercadinhocerrado.infra.MigracaoBancoTest",
+      "tipo": "integracao",
+      "testes": 5,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 13.936
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.movimentacao.RegistroMovimentacaoTest",
+      "tipo": "integracao",
+      "testes": 30,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 6.82
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.produto.CadastroProdutoTest",
+      "tipo": "integracao",
+      "testes": 25,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 4.625
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.produto.ManutencaoProdutoTest",
+      "tipo": "integracao",
+      "testes": 25,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 3.704
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.produto.ProdutoTest",
+      "tipo": "unitario",
+      "testes": 8,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 0.013
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.seguranca.AutenticacaoTest",
+      "tipo": "integracao",
+      "testes": 12,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 15.026
+    },
+    {
+      "classe": "br.com.mercadinhocerrado.seguranca.UsuarioTest",
+      "tipo": "unitario",
+      "testes": 3,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "tempoSegundos": 0.006
+    }
+  ]
+}

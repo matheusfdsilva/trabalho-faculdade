@@ -19,6 +19,8 @@ Data: 27/10/2026. Este registro descreve a verificação técnica do desenvolvim
 
 ## Testes automatizados
 
+Atualização de 28/10/2026: a suíte passou com **108 testes (11 unitários e 97 de integração)** e **98% de cobertura de instruções Java**. Consulte as [evidências e relatórios originais](evidencias/testes-2026-10-28/LEIA-ME.md). Os números abaixo registram a execução anterior da revisão final.
+
 Com JDK 21 e Docker disponíveis:
 
 ```powershell

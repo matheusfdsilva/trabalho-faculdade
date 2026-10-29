@@ -1,0 +1,421 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< br.com.mercadinhocerrado:mercadinho-cerrado >-------------
+[INFO] Building Mercadinho Cerrado 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.15:prepare-agent (default) @ mercadinho-cerrado ---
+[INFO] argLine set to -javaagent:C:\\Users\\mathe\\Falculdade\\mercadinho\\.maven-cache\\org\\jacoco\\org.jacoco.agent\\0.8.15\\org.jacoco.agent-0.8.15-runtime.jar=destfile=C:\\Users\\mathe\\Falculdade\\mercadinho\\target\\jacoco.exec,append=false
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mercadinho-cerrado ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mercadinho-cerrado ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mercadinho-cerrado ---
+[INFO] skip non existing resourceDirectory C:\Users\mathe\Falculdade\mercadinho\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mercadinho-cerrado ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ mercadinho-cerrado ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running br.com.mercadinhocerrado.infra.MigracaoBancoTest
+20:21:17.844 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+20:21:17.855 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+20:21:17.913 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+20:21:18.388 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+20:21:18.859 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+20:21:18.859 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+20:21:18.889 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 27.2.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 15774 MB
+  Labels: 
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+20:21:18.959 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+20:21:19.330 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 6ade2cce4582aae2415245bedeaf2ba7efa5d6501842b2b2d02786720e25225c
+20:21:20.154 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT1.1949729S
+20:21:20.165 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+20:21:20.165 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+20:21:20.166 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+20:21:20.166 [main] INFO tc.postgres:16-alpine -- Creating container for image: postgres:16-alpine
+20:21:20.419 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine is starting: 9045feb5b3f61aa5883b67fa9f4d0aa2a9f7f2059031d43fb59523bcf50961c7
+20:21:22.052 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine started in PT1.8858475S
+20:21:22.053 [main] INFO tc.postgres:16-alpine -- Container is started (JDBC URL: jdbc:postgresql://localhost:59290/test?loggerLevel=OFF)
+20:21:22.913 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:59290/test?loggerLevel=OFF (PostgreSQL 16.15)
+20:21:23.042 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "public"."flyway_schema_history" does not exist yet
+20:21:23.056 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.059s)
+20:21:23.078 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "public"."flyway_schema_history" ...
+20:21:23.165 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": << Empty Schema >>
+20:21:23.185 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "1 - criar produtos e movimentacoes"
+20:21:23.248 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "2 - rastrear resultado e reenvios"
+20:21:23.272 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "3 - indexar historico global"
+20:21:23.298 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "4 - criar usuarios"
+20:21:23.326 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.050s)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:24.198-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : Starting ForkedBooter v3.5.6 using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:24.199-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : The following 1 profile is active: "default"
+2026-10-28T20:21:25.070-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:25.169-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 85 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:25.736-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-28T20:21:25.817-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@49c3f97e
+2026-10-28T20:21:25.819-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-28T20:21:25.835-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59290/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:25.862-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.013s)
+2026-10-28T20:21:25.930-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-10-28T20:21:25.932-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-10-28T20:21:26.076-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:26.196-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.53.Final
+2026-10-28T20:21:26.261-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:26.729-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:26.877-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:28.236-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:28.293-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:28.648-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-28T20:21:30.174-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : Started ForkedBooter in 6.588 seconds (process running for 13.673)
+2026-10-28T20:21:30.206-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.009s)
+2026-10-28T20:21:30.216-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:30.218-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-28T20:21:30.220-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-10-28T20:21:30.335-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59290/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:30.352-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.database.base.Schema   : Creating schema "upgrade_test" ...
+2026-10-28T20:21:30.361-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "upgrade_test"."flyway_schema_history" ...
+2026-10-28T20:21:30.452-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "upgrade_test": null
+2026-10-28T20:21:30.464-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "upgrade_test" to version "1 - criar produtos e movimentacoes"
+2026-10-28T20:21:30.501-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "upgrade_test", now at version v1 (execution time 00:00.029s)
+2026-10-28T20:21:30.638-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59290/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:30.660-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.009s)
+2026-10-28T20:21:30.724-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "upgrade_test": 1
+2026-10-28T20:21:30.729-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "upgrade_test" to version "2 - rastrear resultado e reenvios"
+2026-10-28T20:21:30.754-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "upgrade_test" to version "3 - indexar historico global"
+2026-10-28T20:21:30.772-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "upgrade_test" to version "4 - criar usuarios"
+2026-10-28T20:21:30.793-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "upgrade_test", now at version v4 (execution time 00:00.023s)
+2026-10-28T20:21:31.005-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.010s)
+2026-10-28T20:21:31.076-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-10-28T20:21:31.077-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-10-28T20:21:31.169-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.010s)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.94 s -- in br.com.mercadinhocerrado.infra.MigracaoBancoTest
+[INFO] Running br.com.mercadinhocerrado.movimentacao.RegistroMovimentacaoTest
+2026-10-28T20:21:31.651-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [br.com.mercadinhocerrado.movimentacao.RegistroMovimentacaoTest]: RegistroMovimentacaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T20:21:31.719-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.com.mercadinhocerrado.MercadinhoApplication for test class br.com.mercadinhocerrado.movimentacao.RegistroMovimentacaoTest
+2026-10-28T20:21:31.749-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-28T20:21:31.829-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine is starting: bf39046f0fa2c2586d49d4153e940ca50d7505f75eed89fb8fa027c6c7214750
+2026-10-28T20:21:33.257-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.5082024S
+2026-10-28T20:21:33.257-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:59319/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:33.323-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.m.RegistroMovimentacaoTest         : Starting RegistroMovimentacaoTest using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:33.323-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.m.RegistroMovimentacaoTest         : The following 1 profile is active: "default"
+2026-10-28T20:21:33.672-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:33.683-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:33.856-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-28T20:21:33.918-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@3d640239
+2026-10-28T20:21:33.918-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-28T20:21:33.920-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59319/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:33.939-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-28T20:21:33.940-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.007s)
+2026-10-28T20:21:33.951-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-28T20:21:34.033-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-28T20:21:34.041-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - criar produtos e movimentacoes"
+2026-10-28T20:21:34.086-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - rastrear resultado e reenvios"
+2026-10-28T20:21:34.253-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - indexar historico global"
+2026-10-28T20:21:34.271-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - criar usuarios"
+2026-10-28T20:21:34.291-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.051s)
+2026-10-28T20:21:34.316-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:34.319-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:34.327-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:34.342-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:34.390-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:34.406-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:34.864-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name autenticacaoProvider
+2026-10-28T20:21:35.003-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-10-28T20:21:35.514-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T20:21:35.515-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T20:21:35.516-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-28T20:21:35.530-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.m.RegistroMovimentacaoTest         : Started RegistroMovimentacaoTest in 2.259 seconds (process running for 19.029)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\mathe\Falculdade\mercadinho\.maven-cache\net\bytebuddy\byte-buddy-agent\1.17.8\byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-28T20:21:37.712-03:00  WARN 31032 --- [mercadinho-cerrado] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: P0001
+2026-10-28T20:21:37.712-03:00 ERROR 31032 --- [mercadinho-cerrado] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: Falha de gravacao simulada
+  Onde: PL/pgSQL function rejeitar_movimentacao_teste() line 2 at RAISE
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.820 s -- in br.com.mercadinhocerrado.movimentacao.RegistroMovimentacaoTest
+[INFO] Running br.com.mercadinhocerrado.produto.CadastroProdutoTest
+2026-10-28T20:21:38.440-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [br.com.mercadinhocerrado.produto.CadastroProdutoTest]: CadastroProdutoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T20:21:38.775-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.com.mercadinhocerrado.MercadinhoApplication for test class br.com.mercadinhocerrado.produto.CadastroProdutoTest
+2026-10-28T20:21:38.778-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-28T20:21:38.844-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine is starting: 5848d937b3b89d81d460fe75a238fc222102f8e1eaddf0107416bb57d67e297c
+2026-10-28T20:21:40.224-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.4458824S
+2026-10-28T20:21:40.224-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:59335/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:40.261-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.CadastroProdutoTest        : Starting CadastroProdutoTest using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:40.261-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.CadastroProdutoTest        : The following 1 profile is active: "default"
+2026-10-28T20:21:40.987-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:40.997-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:41.071-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-10-28T20:21:41.151-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@79e324cd
+2026-10-28T20:21:41.151-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-10-28T20:21:41.152-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59335/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:41.196-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-28T20:21:41.197-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.030s)
+2026-10-28T20:21:41.208-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-28T20:21:41.283-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-28T20:21:41.287-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - criar produtos e movimentacoes"
+2026-10-28T20:21:41.336-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - rastrear resultado e reenvios"
+2026-10-28T20:21:41.356-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - indexar historico global"
+2026-10-28T20:21:41.424-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - criar usuarios"
+2026-10-28T20:21:41.469-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.098s)
+2026-10-28T20:21:41.486-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:41.488-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:41.495-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:41.520-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:41.556-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:41.571-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:41.991-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name autenticacaoProvider
+2026-10-28T20:21:42.000-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-10-28T20:21:42.124-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T20:21:42.125-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T20:21:42.126-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-28T20:21:42.142-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.CadastroProdutoTest        : Started CadastroProdutoTest in 1.914 seconds (process running for 25.641)
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.625 s -- in br.com.mercadinhocerrado.produto.CadastroProdutoTest
+[INFO] Running br.com.mercadinhocerrado.produto.ManutencaoProdutoTest
+2026-10-28T20:21:43.069-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [br.com.mercadinhocerrado.produto.ManutencaoProdutoTest]: ManutencaoProdutoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T20:21:43.074-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.com.mercadinhocerrado.MercadinhoApplication for test class br.com.mercadinhocerrado.produto.ManutencaoProdutoTest
+2026-10-28T20:21:43.079-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-28T20:21:43.122-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine is starting: fdd727d35a93c4f339a44f21ac3bdab83c5adea2bf512980629f6a41ed015202
+2026-10-28T20:21:44.427-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.3484805S
+2026-10-28T20:21:44.428-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:59351/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:44.446-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.ManutencaoProdutoTest      : Starting ManutencaoProdutoTest using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:44.446-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.ManutencaoProdutoTest      : The following 1 profile is active: "default"
+2026-10-28T20:21:44.574-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:44.594-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:44.668-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2026-10-28T20:21:44.728-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@6d129631
+2026-10-28T20:21:44.728-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2026-10-28T20:21:44.730-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:59351/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:44.746-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-28T20:21:44.751-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.009s)
+2026-10-28T20:21:44.761-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-28T20:21:44.868-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-28T20:21:44.876-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - criar produtos e movimentacoes"
+2026-10-28T20:21:44.909-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - rastrear resultado e reenvios"
+2026-10-28T20:21:44.975-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - indexar historico global"
+2026-10-28T20:21:44.990-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - criar usuarios"
+2026-10-28T20:21:45.008-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.062s)
+2026-10-28T20:21:45.021-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:45.024-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:45.030-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:45.036-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:45.068-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:45.094-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:45.467-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name autenticacaoProvider
+2026-10-28T20:21:45.470-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-10-28T20:21:45.545-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T20:21:45.546-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T20:21:45.546-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-10-28T20:21:45.551-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.produto.ManutencaoProdutoTest      : Started ManutencaoProdutoTest in 1.121 seconds (process running for 29.05)
+2026-10-28T20:21:46.147-03:00  WARN 31032 --- [mercadinho-cerrado] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23503
+2026-10-28T20:21:46.147-03:00 ERROR 31032 --- [mercadinho-cerrado] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: update or delete on table "produto" violates foreign key constraint "fk_movimentacao_produto" on table "movimentacao"
+  Detalhe: Key (id_produto)=(47) is still referenced from table "movimentacao".
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.704 s -- in br.com.mercadinhocerrado.produto.ManutencaoProdutoTest
+[INFO] Running br.com.mercadinhocerrado.produto.ProdutoTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in br.com.mercadinhocerrado.produto.ProdutoTest
+[INFO] Running br.com.mercadinhocerrado.seguranca.AutenticacaoTest
+2026-10-28T20:21:46.791-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [br.com.mercadinhocerrado.seguranca.AutenticacaoTest]: AutenticacaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T20:21:46.799-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.com.mercadinhocerrado.MercadinhoApplication for test class br.com.mercadinhocerrado.seguranca.AutenticacaoTest
+2026-10-28T20:21:46.803-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-28T20:21:46.846-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine is starting: b2434d32c12b843d494b8a051b975918ae7cd87452047bdeb824a032e355d46d
+2026-10-28T20:21:48.144-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.3416502S
+2026-10-28T20:21:48.145-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:55053/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:48.160-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.seguranca.AutenticacaoTest         : Starting AutenticacaoTest using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:48.160-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.seguranca.AutenticacaoTest         : The following 1 profile is active: "default"
+2026-10-28T20:21:48.278-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:48.287-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:48.352-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Starting...
+2026-10-28T20:21:48.434-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-5 - Added connection org.postgresql.jdbc.PgConnection@4a14cfdb
+2026-10-28T20:21:48.435-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Start completed.
+2026-10-28T20:21:48.436-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:55053/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:48.451-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-28T20:21:48.452-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.004s)
+2026-10-28T20:21:48.461-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-28T20:21:48.543-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-28T20:21:48.556-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - criar produtos e movimentacoes"
+2026-10-28T20:21:48.635-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - rastrear resultado e reenvios"
+2026-10-28T20:21:48.682-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - indexar historico global"
+2026-10-28T20:21:48.704-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - criar usuarios"
+2026-10-28T20:21:48.718-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.099s)
+2026-10-28T20:21:48.732-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:48.733-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:48.739-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:48.754-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:48.791-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:48.817-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:49.232-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name autenticacaoProvider
+2026-10-28T20:21:49.236-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-10-28T20:21:49.308-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T20:21:49.308-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T20:21:49.309-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-28T20:21:49.314-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] b.c.m.seguranca.AutenticacaoTest         : Started AutenticacaoTest in 1.166 seconds (process running for 32.813)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-28T20:21:50.448-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : Starting ForkedBooter v3.5.6 using Java 21.0.4 with PID 31032 (started by mathe in C:\Users\mathe\Falculdade\mercadinho)
+2026-10-28T20:21:50.448-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : The following 1 profile is active: "default"
+2026-10-28T20:21:50.541-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T20:21:50.554-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 3 JPA repository interfaces.
+2026-10-28T20:21:50.602-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Starting...
+2026-10-28T20:21:50.659-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-6 - Added connection org.postgresql.jdbc.PgConnection@79fbd19e
+2026-10-28T20:21:50.659-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Start completed.
+2026-10-28T20:21:50.660-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:55053/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T20:21:50.683-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.008s)
+2026-10-28T20:21:50.750-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-10-28T20:21:50.751-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-10-28T20:21:50.763-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T20:21:50.765-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T20:21:50.775-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T20:21:50.784-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T20:21:50.822-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T20:21:50.855-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:51.274-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] o.a.maven.surefire.booter.ForkedBooter   : Started ForkedBooter in 0.841 seconds (process running for 34.773)
+Conta criada com sucesso. A aplica��o pode ser iniciada normalmente.
+2026-10-28T20:21:51.624-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T20:21:51.624-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown initiated...
+2026-10-28T20:21:51.626-03:00  INFO 31032 --- [mercadinho-cerrado] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown completed.
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.03 s -- in br.com.mercadinhocerrado.seguranca.AutenticacaoTest
+[INFO] Running br.com.mercadinhocerrado.seguranca.UsuarioTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in br.com.mercadinhocerrado.seguranca.UsuarioTest
+2026-10-28T20:22:01.838-03:00  INFO 31032 --- [mercadinho-cerrado] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 108, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mercadinho-cerrado ---
+[INFO] Building jar: C:\Users\mathe\Falculdade\mercadinho\target\mercadinho-cerrado-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ mercadinho-cerrado ---
+[INFO] Replacing main artifact C:\Users\mathe\Falculdade\mercadinho\target\mercadinho-cerrado-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\mathe\Falculdade\mercadinho\target\mercadinho-cerrado-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.15:report (relatorio-cobertura) @ mercadinho-cerrado ---
+[INFO] Loading execution data file C:\Users\mathe\Falculdade\mercadinho\target\jacoco.exec
+[INFO] Analyzed bundle 'Mercadinho Cerrado' with 31 classes
+[INFO] 
+[INFO] --- surefire-report:3.5.6:report-only (relatorio-testes) @ mercadinho-cerrado ---
+[WARNING] Unable to find a URL to the parent project. The parent menu will NOT be added.
+[INFO] Rendering content with org.apache.maven.skins:maven-fluido-skin:jar:2.0.0-M9 skin
+[WARNING] Unable to locate Test Source XRef to link to -- DISABLED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  56.438 s
+[INFO] Finished at: 2026-10-28T20:22:10-03:00
+[INFO] ------------------------------------------------------------------------
