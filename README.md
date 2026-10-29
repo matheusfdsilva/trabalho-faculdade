@@ -2,7 +2,7 @@
 
 Projeto acadêmico de um sistema para auxiliar o Mercadinho Cerrado no controle de estoque e no acompanhamento das movimentações de produtos.
 
-Implementação do MVP concluída para execução local. Consulte o [guia de implantação](docs/IMPLANTACAO.md), o [relatório de validação](docs/VALIDACAO.md) e as pendências de publicação e avaliação externa antes de registrar o aceite acadêmico.
+MVP publicado para demonstração acadêmica em **https://mercadinho-cerrado-mvp.onrender.com**, com PostgreSQL no Neon. O primeiro deploy foi aprovado em 29/10/2026. O acesso exige conta individual; não há senha padrão pública. Consulte o [registro do deploy e monitoramento](docs/DEPLOY.md), o [guia de implantação](docs/IMPLANTACAO.md) e o [relatório de validação](docs/VALIDACAO.md). A avaliação externa continua pendente. No plano gratuito, o primeiro acesso após inatividade pode demorar cerca de um minuto ou mais.
 
 ## Objetivo
 
@@ -65,7 +65,7 @@ A pasta `prototipo/` contém capturas reais da interface das etapas 8 e 9, com c
 
 A base Java 21/Spring Boot e a infraestrutura PostgreSQL/Flyway estão criadas. O [plano de implementação](docs/PLANO.md) organiza o trabalho em dez commits adicionais ao commit da estrutura inicial, com requisitos e critérios de validação extraídos dos documentos acadêmicos.
 
-As dez etapas técnicas foram concluídas, em commits separados. O cadastro, a consulta, a edição e a exclusão protegida de produtos estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A interface inclui login, estoque, produtos, movimentação e resultado. Execução local, Docker, testes e medição exploratória estão documentados. Publicação externa, medição no Android e aceite do participante permanecem pendentes.
+As dez etapas técnicas foram concluídas, em commits separados. O cadastro, a consulta, a edição e a exclusão protegida de produtos estão implementados, assim como entradas e saídas transacionais, filtros de reposição e histórico paginado. A interface inclui login, estoque, produtos, movimentação e resultado. Execução local, Docker, testes e medição exploratória estão documentados. A publicação gratuita no Render com banco Neon foi verificada; medição no Android e aceite do participante permanecem pendentes.
 
 ## Execução da base técnica
 

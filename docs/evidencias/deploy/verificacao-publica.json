@@ -1,0 +1,12 @@
+{
+  "dataUTC": "2026-10-29T22:18:44.043227+00:00",
+  "url": "https://mercadinho-cerrado-mvp.onrender.com",
+  "verificacoes": [
+    "HTTPS e saude do banco: HTTP 200, status UP",
+    "API de produtos bloqueia consulta sem login: HTTP 401",
+    "Autenticacao com CSRF e cookie de sessao Secure: aprovada",
+    "Quatro produtos ficticios cadastrados pela API no PostgreSQL remoto",
+    "Consulta autenticada confirma persistencia dos produtos"
+  ],
+  "produtos": 4
+}

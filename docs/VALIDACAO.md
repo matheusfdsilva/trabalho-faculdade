@@ -2,6 +2,8 @@
 
 Data: 27/10/2026. Este registro descreve a verificação técnica do desenvolvimento. Ele não representa aceite de um participante externo.
 
+**Atualização de 29/10/2026:** a publicação gratuita com HTTPS no Render e PostgreSQL no Neon foi concluída e verificada. O endpoint `/health` respondeu `UP`, e o cadastro e uma saída de mercadoria foram exercitados no ambiente público. Consulte o [registro de deploy](DEPLOY.md). As referências à publicação pendente abaixo correspondem à situação histórica de 27/10; a medição no Android, a avaliação externa e as demais pendências não foram concluídas por este deploy.
+
 ## Requisitos e evidências
 
 | Requisito | Implementação e verificação |

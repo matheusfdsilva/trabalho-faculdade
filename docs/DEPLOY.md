@@ -1,5 +1,23 @@
 # Publicação gratuita — Render e Neon
 
+## Publicação verificada em 29/10/2026
+
+- Aplicação: https://mercadinho-cerrado-mvp.onrender.com
+- Saúde: https://mercadinho-cerrado-mvp.onrender.com/health — HTTP 200, `{"status":"UP"}` na conferência.
+- Render: serviço `mercadinho-cerrado-mvp`, Docker, plano **Free**, região Ohio.
+- Neon: projeto `mercadinho-cerrado`, plano **Free**, PostgreSQL 16, banco dedicado.
+- Revisão publicada: `9da63e5b96d77dc4b71be4216642b4ef38664f7f`.
+- CI aprovada: https://github.com/matheusfdsilva/trabalho-faculdade/actions/runs/40964117035 — duração 1 min 13 s.
+- Primeiro deploy: **Deploy succeeded | Live**, iniciado às 19:15:18 e concluído às 19:18:31 (America/Sao_Paulo), duração 3 min 13 s.
+
+Foram conferidos HTTPS, saúde do banco, rejeição HTTP 401 da consulta de produtos sem login, autenticação com CSRF, cookie Secure e cadastro/consulta de quatro produtos fictícios no PostgreSQL remoto. Pela interface pública, foi confirmada a saída de duas unidades de Óleo de Soja 900 ml: saldo anterior 6, saldo resultante 4 e alerta de reposição. A consulta adicional do histórico por script não foi executada após a autorização ser recusada; não faz parte das verificações concluídas.
+
+O endpoint de saúde possui dois testes unitários aprovados para banco disponível e falha de acesso, sem exposição de detalhes internos. A execução local selecionada passou com 13 testes unitários; a revisão completa foi aprovada na CI indicada acima. As evidências anteriores de 108 testes e 98% de cobertura são da execução de 28/10, anterior ao novo módulo de saúde.
+
+O Health Check Path `/health` e a opção **Only failure notifications** foram salvos no Render. Não foi provocada indisponibilidade no serviço publicado para testar a entrega de um alerta; não se afirma que um e-mail de falha tenha sido recebido.
+
+Capturas e resultados: [evidências do deploy](evidencias/deploy/LEIA-ME.md). As credenciais de avaliação foram entregues em `.env.acesso`, arquivo local ignorado pelo Git, sem senha publicada neste documento.
+
 O projeto contém `render.yaml` com serviço Docker no plano Free, região Ohio e endpoint de saúde `/health`. A criação pelo formulário do Render deve repetir esses valores; o arquivo não é aplicado automaticamente nesse modo.
 
 ## Configuração
