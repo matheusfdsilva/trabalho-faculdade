@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: mercadinho-cerrado-mvp
+    runtime: docker
+    plan: free
+    region: ohio
+    branch: main
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:MaxRAMPercentage=65 -XX:+ExitOnOutOfMemoryError
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
